@@ -4,7 +4,7 @@ import Profile, { ProfileSkeleton } from "./profile"
 import NewNoteButton from "./newnotebutton"
 
 async function getData() {
-  await new Promise((resolve) => setTimeout(resolve, 4000))
+  // await new Promise((resolve) => setTimeout(resolve, 4000))
   return [
     {
       id: 1,
@@ -69,7 +69,7 @@ export default function Sidebar() {
   return (
     <aside className="relative flex flex-col border-r bg-neutral-900 border-r-neutral-800 isolate">
 
-      <div className="absolute -z-10 w-full h-1 top-0 bg-orange-700" />
+      {/* <div className="absolute -z-10 w-full h-1 top-0 bg-orange-700" /> */}
       {/* <div className="absolute -z-10 h-full w-0.5 left-6 bg-orange-800/80" /> */}
 
       <NewNoteButton />

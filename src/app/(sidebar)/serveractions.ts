@@ -1,6 +1,6 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { decode } from "next-auth/jwt";
 import { prisma } from "@/db";
@@ -21,12 +21,10 @@ export async function createNote() {
     token: token?.value,
     secret: process.env.NEXTAUTH_SECRET,
   });
-  const owner = session?.sub;
+  const owner = session?.email;
   const loggedIn = owner != undefined;
 
-  if (!loggedIn) {
-    redirect("/note/new");
-  } else {
+  if (loggedIn) {
     const note = await prisma.note.create({
       data: {
         title: "New Note",
@@ -35,6 +33,8 @@ export async function createNote() {
       },
     });
 
-    redirect(`/note/${note.id}`);
+    revalidatePath("/");
+
+    return note;
   }
 }

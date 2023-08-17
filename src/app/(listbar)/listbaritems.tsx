@@ -1,35 +1,28 @@
-import { Note } from "./listbar"
+import { getServerSession } from "next-auth"
 import ListbarItem from "./listbaritem"
+import { prisma } from "@/db"
 
 async function getNotes() {
-  await new Promise((resolve) => setTimeout(resolve, 4000))
-  return [
-    {
-      id: "1",
-      title: "Note 1",
-      content: "Content 1",
-      createdAt: new Date(),
-    },
-    {
-      id: "2",
-      title: "Note 2",
-      content: "Content 2",
-      createdAt: new Date(),
-    },
-    {
-      id: "3",
-      title: "Note 3",
-      content: "Content 3",
-      createdAt: new Date(),
-    },
-  ] as Note[]
+  const session = await getServerSession();
+
+  const notes = await prisma.note.findMany({
+    where: {
+      owner: {
+        equals: session?.user?.email ?? "unknown"
+      }
+    }
+  })
+
+  return notes
 }
+
+export type Note = Awaited<ReturnType<typeof getNotes>>[number]
 
 export default async function ListbarItems() {
   const notes = await getNotes()
 
   return (
-    <ul className="flex flex-col items-center justify-start mt-4 divide-y divide-neutral-800">
+    <ul className="flex flex-col items-center justify-start mt-4 divide-y divide-neutral-800 overflow-auto">
       {notes.map((note) => (
         <ListbarItem key={note.id} note={note} />
       ))}

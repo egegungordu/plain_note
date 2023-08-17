@@ -1,6 +1,7 @@
 "use client"
-import { Note } from "./listbar"
+import { Prisma } from "@prisma/client"
 import Link from "next/link"
+import { Note } from "./listbaritems"
 
 export default function ListbarItem({ note }: { note: Note }) {
   return (

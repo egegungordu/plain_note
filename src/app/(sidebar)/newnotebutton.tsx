@@ -7,9 +7,13 @@ import { useTransition } from 'react'
 export default function NewNoteButton() {
   const [isPending, startTransition] = useTransition()
 
+  console.log(isPending)
+
   return (
     <button
-      onClick={() => startTransition(() => createNote())}
+      onClick={() => startTransition(async () => {
+        const note = await createNote()
+      })}
       className="bg-orange-700 mx-4 mt-4 rounded-full hover:bg-orange-800 transition-colors h-10 flex items-center justify-center">
       <span className="text-sm font-semibold text-neutral-300">
         New note

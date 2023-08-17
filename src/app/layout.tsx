@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} font-sans bg-black flex min-h-screen`}
+        className={`${inter.variable} font-sans bg-black flex max-h-screen`}
       >
         <Sidebar />
         <Listbar />

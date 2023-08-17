@@ -2,13 +2,6 @@ import { TbSearch } from "react-icons/tb"
 import ListbarItems, { ListbarItemsSkeleton } from "./listbaritems"
 import { Suspense } from "react"
 
-export interface Note {
-  id: string
-  title: string
-  content: string
-  createdAt: Date
-}
-
 export default function Listbar() {
   return (
     <section className="flex flex-col border-r bg-neutral-900/70 border-r-neutral-800 py-4">

@@ -2,7 +2,6 @@ import TooltipElement from "@/components/tooltipelement"
 import { getServerSession } from "next-auth/next";
 import LoggedOutProfile from "./loggedoutprofile";
 import LoggedInProfile from "./loggedinprofile"
-import { Session } from "next-auth";
 
 export default async function Profile() {
   const session = await getServerSession()
