@@ -21,6 +21,8 @@ export async function createNote() {
     token: token?.value,
     secret: process.env.NEXTAUTH_SECRET,
   });
+  console.log(token);
+  console.log(session);
   const owner = session?.email;
   const loggedIn = owner != undefined;
 
