@@ -1,5 +1,6 @@
 import { TbSearch } from "react-icons/tb"
-import ListbarItem from "./listbaritem"
+import ListbarItems, { ListbarItemsSkeleton } from "./listbaritems"
+import { Suspense } from "react"
 
 export interface Note {
   id: string
@@ -8,33 +9,7 @@ export interface Note {
   createdAt: Date
 }
 
-async function getNotes() {
-  await new Promise((resolve) => setTimeout(resolve, 4000))
-  return [
-    {
-      id: "1",
-      title: "Note 1",
-      content: "Content 1",
-      createdAt: new Date(),
-    },
-    {
-      id: "2",
-      title: "Note 2",
-      content: "Content 2",
-      createdAt: new Date(),
-    },
-    {
-      id: "3",
-      title: "Note 3",
-      content: "Content 3",
-      createdAt: new Date(),
-    },
-  ] as Note[]
-}
-
-export default async function Listbar() {
-  const notes = await getNotes()
-
+export default function Listbar() {
   return (
     <section className="flex flex-col border-r bg-neutral-900/70 border-r-neutral-800 py-4">
       <div className="relative px-4">
@@ -47,11 +22,9 @@ export default async function Listbar() {
         All Notes
       </h2>
 
-      <ul className="flex flex-col items-center justify-start mt-4 divide-y divide-neutral-800">
-        {notes.map((note) => (
-          <ListbarItem key={note.id} note={note} />
-        ))}
-      </ul>
+      <Suspense fallback={<ListbarItemsSkeleton />}>
+        <ListbarItems />
+      </Suspense>
     </section >
   )
 }
