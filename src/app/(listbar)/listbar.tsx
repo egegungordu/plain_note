@@ -1,7 +1,40 @@
-"use client"
 import { TbSearch } from "react-icons/tb"
+import ListbarItem from "./listbaritem"
 
-export default function Listbar() {
+export interface Note {
+  id: string
+  title: string
+  content: string
+  createdAt: Date
+}
+
+async function getNotes() {
+  await new Promise((resolve) => setTimeout(resolve, 4000))
+  return [
+    {
+      id: "1",
+      title: "Note 1",
+      content: "Content 1",
+      createdAt: new Date(),
+    },
+    {
+      id: "2",
+      title: "Note 2",
+      content: "Content 2",
+      createdAt: new Date(),
+    },
+    {
+      id: "3",
+      title: "Note 3",
+      content: "Content 3",
+      createdAt: new Date(),
+    },
+  ] as Note[]
+}
+
+export default async function Listbar() {
+  const notes = await getNotes()
+
   return (
     <section className="flex flex-col border-r bg-neutral-900/70 border-r-neutral-800 py-4">
       <div className="relative px-4">
@@ -15,13 +48,10 @@ export default function Listbar() {
       </h2>
 
       <ul className="flex flex-col items-center justify-start mt-4 divide-y divide-neutral-800">
-        <li className="w-full h-20 hover:bg-neutral-800/50 mx-4">
-        </li>
-        <li className="w-full h-20 hover:bg-neutral-800/50 mx-4">
-        </li>
-        <li className="w-full h-20 hover:bg-neutral-800/50 mx-4">
-        </li>
+        {notes.map((note) => (
+          <ListbarItem key={note.id} note={note} />
+        ))}
       </ul>
-    </section>
+    </section >
   )
 }

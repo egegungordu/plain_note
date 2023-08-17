@@ -2,7 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Sidebar from './(sidebar)/sidebar'
-import Listbar from './listbar'
+import Listbar from './(listbar)/listbar'
 
 export const metadata: Metadata = {
   title: 'Simple Note',
