@@ -5,7 +5,7 @@ import Sidebar from './(sidebar)/sidebar'
 import Listbar from './(listbar)/listbar'
 
 export const metadata: Metadata = {
-  title: 'Simple Note',
+  title: 'Plain Note',
   description: 'A simple note taking app'
 }
 
