@@ -14,7 +14,7 @@ export default function NewNoteButton() {
       onClick={() => startTransition(async () => {
         const note = await createNote()
       })}
-      className="bg-orange-700 mx-4 mt-4 rounded-full hover:bg-orange-800 transition-colors h-10 flex items-center justify-center">
+      className="border-2 border-orange-700 mx-4 mt-4 rounded-full hover:bg-orange-700 transition-colors h-10 flex items-center justify-center">
       <span className="text-sm font-semibold text-neutral-300">
         New note
       </span>
