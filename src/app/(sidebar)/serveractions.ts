@@ -13,16 +13,19 @@ declare global {
   }
 }
 
+const NEXTAUTH_COOKIE_NAME =
+  process.env.NODE_ENV === "production"
+    ? `__Secure-next-auth.session-token`
+    : "next-auth.session-token";
+
 export async function createNote() {
   "use server";
 
-  const token = cookies().get("next-auth.session-token");
+  const token = cookies().get(NEXTAUTH_COOKIE_NAME);
   const session = await decode({
     token: token?.value,
     secret: process.env.NEXTAUTH_SECRET,
   });
-  console.log(token);
-  console.log(session);
   const owner = session?.email;
   const loggedIn = owner != undefined;
 
