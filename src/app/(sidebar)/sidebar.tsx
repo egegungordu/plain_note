@@ -1,6 +1,7 @@
 import { TbBook, TbHeart, TbPlus } from "react-icons/tb"
 import { Suspense } from "react"
 import Profile, { ProfileSkeleton } from "./profile"
+import NewNoteButton from "./newnotebutton"
 
 async function getData() {
   await new Promise((resolve) => setTimeout(resolve, 4000))
@@ -71,7 +72,9 @@ export default function Sidebar() {
       <div className="absolute -z-10 w-full h-1 top-0 bg-orange-700" />
       {/* <div className="absolute -z-10 h-full w-0.5 left-6 bg-orange-800/80" /> */}
 
-      <div className="flex flex-col py-12">
+      <NewNoteButton />
+
+      <div className="flex flex-col py-4">
         <h1 className="text-sm font-semibold text-neutral-400 my-4 ml-10">Quick Links</h1>
 
         <button className="flex items-center justify-start bg-neutral-300 transition-colors px-10 py-2">
