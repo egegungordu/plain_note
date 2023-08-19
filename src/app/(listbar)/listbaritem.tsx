@@ -11,7 +11,7 @@ export default function ListbarItem({ note }: { note: SmallNote }) {
 
   return (
     <li
-      className={clsx("w-full hover:bg-neutral-800/50", selected && "bg-neutral-800/50")}
+      className={clsx("w-full group hover:bg-neutral-800/50", selected && "bg-neutral-800/50")}
     >
       <Link href={`/note/${note.id}`} className="w-full">
         <div className="px-8 py-3 ">
@@ -22,9 +22,14 @@ export default function ListbarItem({ note }: { note: SmallNote }) {
             <span className="text-neutral-500 text-xs">
               {note.createdAt.toLocaleDateString()}
             </span>
-            <p className="text-neutral-500 text-xs ml-2 overflow-ellipsis overflow-hidden whitespace-nowrap">
+            <p className="text-neutral-500 text-xs ml-2 overflow-ellipsis overflow-hidden whitespace-nowrap group-hover:hidden">
               {note.shortContent}
             </p>
+            <span className="text-neutral-500 text-xs ml-2 hidden group-hover:block">
+              {note.createdAt.toLocaleTimeString([], { timeStyle: "short" })
+                .replace("AM", "am")
+                .replace("PM", "pm")}
+            </span>
           </div>
         </div>
       </Link>
