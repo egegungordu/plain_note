@@ -1,6 +1,6 @@
 "use client"
 
-import { Note } from "@/app/(listbar)/listbaritems"
+import { Note } from "@prisma/client"
 import { saveNote } from "./serveractions"
 import { useSession } from "next-auth/react"
 import { useTransition } from "react"

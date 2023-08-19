@@ -32,8 +32,9 @@ export async function createNote() {
   if (loggedIn) {
     const note = await prisma.note.create({
       data: {
-        title: "New Note",
-        content: "This is a new note",
+        title: "",
+        content: "",
+        shortContent: "",
         owner,
       },
     });

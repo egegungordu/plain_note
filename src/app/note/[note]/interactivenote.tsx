@@ -1,6 +1,6 @@
 "use client"
 
-import { Note } from "@/app/(listbar)/listbaritems"
+import { Note } from "@prisma/client"
 import { FormEventHandler, useRef, useState } from "react"
 import { useEventListener } from "usehooks-ts"
 

@@ -12,10 +12,11 @@ datasource db {
 }
 
 model Note {
-  id        String   @id @default(uuid())
-  title     String?  @db.Text
-  content   String?  @db.MediumText
-  owner     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  title        String?  @db.Text
+  content      String?  @db.MediumText
+  shortContent String?  @db.TinyText
+  owner        String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

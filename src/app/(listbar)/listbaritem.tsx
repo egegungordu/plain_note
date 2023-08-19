@@ -1,10 +1,10 @@
 "use client"
 import Link from "next/link"
-import { Note } from "./listbaritems"
+import { SmallNote } from "./listbaritems"
 import { clsx } from 'clsx';
 import { usePathname } from 'next/navigation';
 
-export default function ListbarItem({ note }: { note: Note }) {
+export default function ListbarItem({ note }: { note: SmallNote }) {
   const pathname = usePathname();
   const id = pathname.split("/")[2];
   const selected = id === note.id;
@@ -23,7 +23,7 @@ export default function ListbarItem({ note }: { note: Note }) {
               {note.createdAt.toLocaleDateString()}
             </span>
             <p className="text-neutral-500 text-xs ml-2 overflow-ellipsis overflow-hidden whitespace-nowrap">
-              {note.content}
+              {note.shortContent}
             </p>
           </div>
         </div>

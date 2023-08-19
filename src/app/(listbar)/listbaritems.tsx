@@ -14,13 +14,20 @@ async function getNotes() {
       owner: {
         equals: session?.user?.email ?? "unknown"
       }
+    },
+    select: {
+      id: true,
+      title: true,
+      shortContent: true,
+      createdAt: true,
+      updatedAt: true,
     }
   })
 
   return notes;
 }
 
-export type Note = Awaited<ReturnType<typeof getNotes>>[number]
+export type SmallNote = Awaited<ReturnType<typeof getNotes>>[number]
 
 export default async function ListbarItems() {
   const notes = await getNotes()

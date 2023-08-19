@@ -13,9 +13,10 @@ export async function saveNote({
   content: string;
   owner: string;
 }) {
+  const shortContent = content.slice(0, 64);
   const note = await prisma.note.update({
     where: { id, owner },
-    data: { title, content },
+    data: { title, content, shortContent },
   });
 
   return note;
