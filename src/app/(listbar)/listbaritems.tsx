@@ -1,9 +1,10 @@
 import { getServerSession } from "next-auth"
+import { authOptions } from "../api/auth/[...nextauth]/route";
 import { prisma } from "@/db"
 import ListbarItemsClient from "./listbaritemsclient";
 
 async function getNotes() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
 
   const notes = await prisma.note.findMany({
     orderBy: {

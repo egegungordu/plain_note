@@ -15,12 +15,12 @@ export default function ListbarItem({ note }: { note: Note }) {
     >
       <Link href={`/note/${note.id}`} className="w-full">
         <div className="px-8 py-3 ">
-          <h2 className="text-neutral-300 text-sm font-semibold">
+          <h2 placeholder="Untitled" className="text-neutral-300 w-64 text-sm font-semibold overflow-ellipsis overflow-hidden whitespace-nowrap empty:after:content-[attr(placeholder)]">
             {note.title}
           </h2>
           <div className="flex items-center mt-1 w-64">
             <span className="text-neutral-500 text-xs">
-              {/* {note.createdAt.toLocaleDateString()} */}
+              {note.createdAt.toLocaleDateString()}
             </span>
             <p className="text-neutral-500 text-xs ml-2 overflow-ellipsis overflow-hidden whitespace-nowrap">
               {note.content}

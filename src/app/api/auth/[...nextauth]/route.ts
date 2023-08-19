@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 declare global {
@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-const handler = NextAuth({
+const authOptions = {
   session: {
     strategy: "jwt",
   },
@@ -20,6 +20,8 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-});
+} as AuthOptions;
 
-export { handler as GET, handler as POST };
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST, authOptions };
