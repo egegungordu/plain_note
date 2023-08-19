@@ -13,8 +13,8 @@ datasource db {
 
 model Note {
   id        String   @id @default(uuid())
-  title     String
-  content   String?
+  title     String?  @db.Text
+  content   String?  @db.MediumText
   owner     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
