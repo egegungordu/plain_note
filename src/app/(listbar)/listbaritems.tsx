@@ -1,11 +1,14 @@
 import { getServerSession } from "next-auth"
-import ListbarItem from "./listbaritem"
 import { prisma } from "@/db"
+import ListbarItemsClient from "./listbaritemsclient";
 
 async function getNotes() {
   const session = await getServerSession();
 
   const notes = await prisma.note.findMany({
+    orderBy: {
+      createdAt: "desc"
+    },
     where: {
       owner: {
         equals: session?.user?.email ?? "unknown"
@@ -13,20 +16,17 @@ async function getNotes() {
     }
   })
 
-  return notes
+  return notes;
 }
 
 export type Note = Awaited<ReturnType<typeof getNotes>>[number]
 
 export default async function ListbarItems() {
   const notes = await getNotes()
-
   return (
-    <ul className="flex flex-col items-center justify-start mt-4 divide-y divide-neutral-800 overflow-auto">
-      {notes.map((note) => (
-        <ListbarItem key={note.id} note={note} />
-      ))}
-    </ul>
+    <>
+      <ListbarItemsClient notes={notes} />
+    </>
   )
 }
 
