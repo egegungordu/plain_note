@@ -22,14 +22,12 @@ export default function InteractiveHeader({ note }: { note: Note }) {
   const handleSave = () => {
     const { title, content } = getNoteState()
     const id = note.id
-    const owner = session?.user?.email!
 
     startTransition(async () => {
       const note = await saveNote({
         id,
         title,
         content,
-        owner,
       })
     })
   }
