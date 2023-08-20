@@ -1,32 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
-import { decode } from "next-auth/jwt";
 import { prisma } from "@/db";
-
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      NEXTAUTH_SECRET: string;
-    }
-  }
-}
-
-const NEXTAUTH_COOKIE_NAME =
-  process.env.NODE_ENV === "production"
-    ? `__Secure-next-auth.session-token`
-    : "next-auth.session-token";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function createNote() {
-  "use server";
-
-  const token = cookies().get(NEXTAUTH_COOKIE_NAME);
-  const session = await decode({
-    token: token?.value,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
-  const owner = session?.email;
+  const session = await getServerSession(authOptions);
+  const owner = session?.user?.email;
+  if (!owner) return;
   const loggedIn = owner != undefined;
 
   if (loggedIn) {

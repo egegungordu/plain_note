@@ -1,10 +1,10 @@
 "use client"
 
-import { Note } from "./listbaritems"
+import { SmallNote } from "./listbaritems"
 import ListbarItem from "./listbaritem"
 import { useRef } from "react"
 
-export default function ListbarItemsClient({ notes }: { notes: Note[] }) {
+export default function ListbarItemsClient({ notes }: { notes: SmallNote[] }) {
   const ref = useRef<HTMLUListElement>(null)
 
   return (
