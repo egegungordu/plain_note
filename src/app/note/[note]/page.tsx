@@ -1,6 +1,6 @@
 import { prisma } from "@/db";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authoptions";
 import InteractiveNote from "./interactivenote"
 import InteractiveHeader from "./interactiveheader";
 

@@ -2,7 +2,7 @@
 
 import { prisma } from "@/db";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authoptions";
 
 export async function deleteNote(id: string) {
   const session = await getServerSession(authOptions);
