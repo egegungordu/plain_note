@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import notesReducer from "./notesSlice";
+import uiReducer from "./uiSlice";
 
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
@@ -10,6 +11,7 @@ export const store = configureStore({
     }),
   reducer: {
     notes: notesReducer,
+    ui: uiReducer,
   },
 });
 
