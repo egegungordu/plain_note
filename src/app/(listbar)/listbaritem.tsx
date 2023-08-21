@@ -3,22 +3,26 @@ import Link from "next/link"
 import { SmallNote } from "./listbaritems"
 import { clsx } from 'clsx';
 import { usePathname } from 'next/navigation';
-import { TbHeart, TbTrash } from "react-icons/tb";
+import { TbHeart, TbHeartFilled, TbTrash } from "react-icons/tb";
+import { deleteStoreNote, editStoreNote } from "@/store/notesSlice"
+import { useSelector, useDispatch, type TypedUseSelectorHook } from "react-redux"
+import { store, RootState, AppDispatch } from "@/store"
 import { deleteNote } from "../serveractions";
-import { useSelector, type TypedUseSelectorHook } from "react-redux"
-import { RootState } from "@/store"
+import { saveNote } from "../note/[note]/serveractions";
 
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
+const useAppDispatch = () => useDispatch<AppDispatch>()
 
 export default function ListbarItem({ note }: { note: SmallNote }) {
   const pathname = usePathname();
   const id = pathname.split("/")[2];
   const selected = id === note.id;
+  const dispatch = useAppDispatch();
 
   const title = useAppSelector((state) => {
     const editedNote = state.notes.editedNotesBuffer[note.id]
     if (editedNote) {
-      return editedNote.title;
+      return editedNote.title ?? note.title;
     } else {
       return note.title;
     }
@@ -27,11 +31,40 @@ export default function ListbarItem({ note }: { note: SmallNote }) {
   const shortContent = useAppSelector((state) => {
     const editedNote = state.notes.editedNotesBuffer[note.id]
     if (editedNote) {
-      return editedNote.content;
+      return editedNote.content ?? note.shortContent;
     } else {
       return note.shortContent;
     }
   })
+
+  const isFavorite = useAppSelector((state) => {
+    const editedNote = state.notes.editedNotesBuffer[note.id]
+    if (editedNote) {
+      return editedNote.isFavorite ?? note.isFavorite;
+    } else {
+      return note.isFavorite;
+    }
+  })
+
+  const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    deleteNote(note.id);
+    dispatch(deleteStoreNote(note.id))
+  }
+
+  const handleToggleFavorite = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    saveNote({
+      id: note.id,
+      isFavorite: !isFavorite,
+    })
+    dispatch(editStoreNote({
+      id: note.id,
+      isFavorite: !isFavorite,
+    }))
+  }
 
   return (
     <li
@@ -62,19 +95,17 @@ export default function ListbarItem({ note }: { note: SmallNote }) {
           </div>
 
           <div className="flex-grow hidden group-hover:flex items-center justify-end">
-            <button onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }} className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-800/50 hover:bg-neutral-700/75 focus:outline-none">
-              <TbHeart className="w-4 h-4 text-neutral-300" />
+            <button onClick={handleToggleFavorite} className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-800/50 hover:bg-neutral-700/75 focus:outline-none">
+              {isFavorite ? (
+                <TbHeartFilled className="w-4 h-4 text-neutral-300" />
+              ) : (
+                <TbHeart className="w-4 h-4 text-neutral-300" />
+              )}
+
             </button>
 
-            <button onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              deleteNote(note.id);
-            }
-            } className="flex items-center justify-center w-8 h-8 rounded-full bg-red-800/80 hover:bg-red-700/75 focus:outline-none ml-2">
+            <button onClick={handleDelete}
+              className="flex items-center justify-center w-8 h-8 rounded-full bg-red-800/80 hover:bg-red-700/75 focus:outline-none ml-2">
               <TbTrash className="w-4 h-4 text-neutral-300" />
             </button>
           </div>

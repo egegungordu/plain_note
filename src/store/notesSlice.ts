@@ -4,8 +4,9 @@ import type { SmallNote } from "@/app/(listbar)/listbaritems";
 
 export interface EditedNote {
   id: string;
-  title: string;
-  content: string;
+  title?: string;
+  content?: string;
+  isFavorite?: boolean;
 }
 
 export interface NotesState {
@@ -22,21 +23,31 @@ const notesSlice = createSlice({
   name: "notes",
   initialState,
   reducers: {
-    setNotes(state, action: PayloadAction<SmallNote[]>) {
+    setStoreNotes(state, action: PayloadAction<SmallNote[]>) {
       state.notes = action.payload;
     },
-    addNote(state, action: PayloadAction<SmallNote>) {
+    addStoreNote(state, action: PayloadAction<SmallNote>) {
       state.notes = [action.payload, ...state.notes];
     },
-    editNote(state, action: PayloadAction<EditedNote>) {
+    deleteStoreNote(state, action: PayloadAction<string>) {
+      state.notes = state.notes.filter((note) => note.id !== action.payload);
+    },
+    editStoreNote(
+      state,
+      action: PayloadAction<Partial<EditedNote> & Pick<EditedNote, "id">>
+    ) {
       const id = action.payload.id;
       state.editedNotesBuffer = {
         ...state.editedNotesBuffer,
-        [id]: action.payload,
+        [id]: {
+          ...state.editedNotesBuffer[id],
+          ...action.payload,
+        },
       };
     },
   },
 });
 
-export const { setNotes, editNote, addNote } = notesSlice.actions;
+export const { setStoreNotes, editStoreNote, addStoreNote, deleteStoreNote } =
+  notesSlice.actions;
 export default notesSlice.reducer;

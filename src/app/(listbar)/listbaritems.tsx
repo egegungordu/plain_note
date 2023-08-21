@@ -21,6 +21,7 @@ async function getNotes() {
       shortContent: true,
       createdAt: true,
       updatedAt: true,
+      isFavorite: true,
     }
   })
 
@@ -29,17 +30,17 @@ async function getNotes() {
 
 export type SmallNote = Awaited<ReturnType<typeof getNotes>>[number]
 import { store } from "@/store";
-import { setNotes } from "@/store/notesSlice";
+import { setStoreNotes } from "@/store/notesSlice";
 import ReduxPreloader from "@/components/reduxpreloader";
 
 export default async function ListbarItems() {
   const notes = await getNotes()
-  store.dispatch(setNotes(notes));
+  store.dispatch(setStoreNotes(notes));
 
   return (
     <>
       <ReduxPreloader notes={notes} />
-      <ListbarItemsClient notes={notes} />
+      <ListbarItemsClient />
     </>
   )
 }

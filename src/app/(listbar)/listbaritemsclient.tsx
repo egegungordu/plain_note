@@ -1,19 +1,13 @@
 "use client"
 
-import { SmallNote } from "./listbaritems"
 import ListbarItem from "./listbaritem"
-// import { useRef } from "react"
 
-import { store } from "@/store"
-import { useSelector, useDispatch, type TypedUseSelectorHook } from "react-redux"
-import { RootState, AppDispatch } from "@/store"
+import { useSelector, type TypedUseSelectorHook } from "react-redux"
+import { RootState } from "@/store"
 
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
-const useAppDispatch = () => useDispatch<AppDispatch>()
 
-export default function ListbarItemsClient({ notes }: { notes: SmallNote[] }) {
-  // const ref = useRef<HTMLUListElement>(null)
-
+export default function ListbarItemsClient() {
   const storeNotes = useAppSelector((state) => state.notes.notes)
 
   return (

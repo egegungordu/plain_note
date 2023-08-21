@@ -6,7 +6,7 @@ import { useTransition } from 'react'
 import { useRouter } from "next/navigation"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store"
-import { addNote } from "@/store/notesSlice"
+import { addStoreNote } from "@/store/notesSlice"
 import { note2small } from "@/utils"
 
 const useAppDispatch = () => useDispatch<AppDispatch>()
@@ -18,12 +18,16 @@ export default function NewNoteButton() {
 
   return (
     <button
-      onClick={() => startTransition(async () => {
-        const note = await createNote()
-        if (!note) return
-        dispatch(addNote(note2small(note)))
-        router.push(`/note/${note.id}`)
-      })}
+      onClick={() => {
+        startTransition(async () => {
+          const note = await createNote()
+          if (!note) return
+          dispatch(addStoreNote(note2small(note)))
+          setTimeout(() => {
+            router.push(`/note/${note.id}`)
+          }, 0)
+        })
+      }}
       disabled={isPending}
       className="border-2 border-orange-700 mx-4 mt-4 rounded-full hover:bg-orange-700 transition-colors h-10 flex items-center justify-center disabled:opacity-70">
       {isPending ? <TbLoader2 className="text-lg animate-spin text-neutral-300" /> :

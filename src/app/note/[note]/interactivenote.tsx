@@ -4,9 +4,9 @@ import { Note } from "@prisma/client"
 import { FormEventHandler, useRef, useTransition } from "react"
 import { useEventListener } from "usehooks-ts"
 
-import { editNote } from "@/store/notesSlice"
+import { editStoreNote } from "@/store/notesSlice"
 import { useDispatch } from "react-redux"
-import { store, AppDispatch } from "@/store"
+import { AppDispatch } from "@/store"
 
 const useAppDispatch = () => useDispatch<AppDispatch>()
 
@@ -23,10 +23,9 @@ export default function InteractiveNote({ note }: { note: Note }) {
   }
 
   const handleTitleInput = (e: React.ChangeEvent<HTMLHeadingElement>) => {
-    dispatch(editNote({
+    dispatch(editStoreNote({
       id: note.id,
       title: e.currentTarget.textContent ?? "",
-      content: store.getState().notes.editedNotesBuffer[note.id]?.content ?? note.content,
     }))
   }
 
@@ -47,9 +46,8 @@ export default function InteractiveNote({ note }: { note: Note }) {
       e.currentTarget.innerHTML = ""
     }
 
-    dispatch(editNote({
+    dispatch(editStoreNote({
       id: note.id,
-      title: store.getState().notes.editedNotesBuffer[note.id]?.title ?? note.title,
       content: e.currentTarget.textContent ?? "",
     }))
   }
