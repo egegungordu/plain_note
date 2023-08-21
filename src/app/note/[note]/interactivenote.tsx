@@ -43,8 +43,8 @@ export default function InteractiveNote({ note }: { note: Note }) {
   })
 
   return (
-    <div className="py-8 w-full h-full overflow-auto flex flex-col">
-      <h1 id="note-title" placeholder="Untitled" onKeyDown={handleTitleKeyDown} spellCheck contentEditable suppressContentEditableWarning className="text-4xl px-8 mt-1 font-semibold text-neutral-300 empty:text-neutral-600 focus:before:absolute focus:before:w-0.5 focus:before:h-full focus:before:bg-orange-700 border-l-4 border-l-transparent focus:border-l-orange-700 focus:before:-left-2 relative focus:outline-none empty:after:content-[attr(placeholder)] empty:after:pointer-events-none hyphens-auto break-word" style={{ overflowWrap: "break-word" }}>
+    <div className="py-8 w-full max-w-full h-full overflow-auto flex flex-col">
+      <h1 id="note-title" placeholder="Untitled" onKeyDown={handleTitleKeyDown} spellCheck contentEditable suppressContentEditableWarning className="text-4xl px-8 mt-1 font-semibold text-neutral-300 empty:text-neutral-600 focus:before:absolute focus:before:w-0.5 focus:before:h-full focus:before:bg-orange-700 border-l-4 border-l-transparent focus:border-l-orange-700 focus:before:-left-2 relative focus:outline-none empty:after:content-[attr(placeholder)] empty:after:pointer-events-none hyphens-manual break-all">
         {note.title}
       </h1>
 
