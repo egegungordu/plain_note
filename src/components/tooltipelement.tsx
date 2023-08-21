@@ -1,6 +1,9 @@
+import { createPortal } from "react-dom";
+
 interface TooltipElement<T extends React.ElementType> {
   text: String;
   as?: T;
+  offset?: number;
   children?: React.ReactNode;
   className?: String;
 }
@@ -8,6 +11,7 @@ interface TooltipElement<T extends React.ElementType> {
 export default function TooltipElement<T extends React.ElementType = "div">({
   text,
   as,
+  offset,
   children,
   className,
   ...props
@@ -18,8 +22,11 @@ export default function TooltipElement<T extends React.ElementType = "div">({
   const Component = as || "div";
 
   return (
-    <Component className={`relative group ${className}`} {...props}>
+    <Component className={`relative group/tooltip ${className}`} {...props}>
       <span
+        style={{
+          top: `-${offset ?? 16}px`
+        }}
         className={[
           "whitespace-nowrap",
           "rounded",
@@ -27,10 +34,10 @@ export default function TooltipElement<T extends React.ElementType = "div">({
           "px-2",
           "py-1",
           "text-neutral-300",
-          "text-sm",
+          "text-xs",
           "absolute",
-          "-top-12",
           "left-1/2",
+          "-translate-y-full",
           "-translate-x-1/2",
           "before:content-['']",
           "before:absolute",
@@ -41,7 +48,7 @@ export default function TooltipElement<T extends React.ElementType = "div">({
           "before:border-transparent",
           "before:border-t-black",
           "opacity-0",
-          "group-hover:opacity-100",
+          "group-hover/tooltip:opacity-100",
           "transition",
           "pointer-events-none",
         ].join(" ")}

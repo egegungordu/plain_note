@@ -9,6 +9,7 @@ import { useSelector, useDispatch, type TypedUseSelectorHook } from "react-redux
 import { store, RootState, AppDispatch } from "@/store"
 import { deleteNote } from "../serveractions";
 import { saveNote } from "../note/[note]/serveractions";
+import TooltipElement from "@/components/tooltipelement";
 
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 const useAppDispatch = () => useDispatch<AppDispatch>()
@@ -95,19 +96,27 @@ export default function ListbarItem({ note }: { note: SmallNote }) {
           </div>
 
           <div className="flex-grow hidden group-hover:flex items-center justify-end">
-            <button onClick={handleToggleFavorite} className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-800/50 hover:bg-neutral-700/75 focus:outline-none">
+            <TooltipElement
+              onClick={handleToggleFavorite}
+              as="button"
+              offset={8}
+              text="Favorite"
+              className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-800/50 hover:bg-neutral-700/75 focus:outline-none">
               {isFavorite ? (
                 <TbHeartFilled className="w-4 h-4 text-neutral-300" />
               ) : (
                 <TbHeart className="w-4 h-4 text-neutral-300" />
               )}
+            </TooltipElement>
 
-            </button>
-
-            <button onClick={handleDelete}
+            <TooltipElement
+              text="Delete"
+              as="button"
+              offset={8}
+              onClick={handleDelete}
               className="flex items-center justify-center w-8 h-8 rounded-full bg-red-800/80 hover:bg-red-700/75 focus:outline-none ml-2">
               <TbTrash className="w-4 h-4 text-neutral-300" />
-            </button>
+            </TooltipElement>
           </div>
         </div>
       </Link>
