@@ -4,8 +4,9 @@ import { Inter } from 'next/font/google'
 import Sidebar from './(sidebar)/sidebar'
 import Listbar from './(listbar)/listbar'
 import { getServerSession } from 'next-auth'
-import { authOptions } from './api/auth/[...nextauth]/route'
+import { authOptions } from "@/app/api/auth/[...nextauth]/authoptions"
 import AuthProvider from '@/components/nextauthprovider'
+import ReduxProvider from '@/components/reduxprovider'
 
 export const metadata: Metadata = {
   title: 'Plain Note',
@@ -30,12 +31,13 @@ export default async function RootLayout({
       <body
         className={`${inter.variable} font-sans bg-black flex h-screen`}
       >
-        <AuthProvider session={session}>
-          <Sidebar />
-          <Listbar />
-          {children}
-
-        </AuthProvider>
+        <ReduxProvider>
+          <AuthProvider session={session}>
+            <Sidebar />
+            <Listbar />
+            {children}
+          </AuthProvider>
+        </ReduxProvider>
       </body>
     </html>
   )

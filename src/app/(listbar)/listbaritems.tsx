@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth"
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authoptions"
 import { prisma } from "@/db"
 import ListbarItemsClient from "./listbaritemsclient";
 
@@ -28,11 +28,17 @@ async function getNotes() {
 }
 
 export type SmallNote = Awaited<ReturnType<typeof getNotes>>[number]
+import { store } from "@/store";
+import { setNotes } from "@/store/notesSlice";
+import ReduxPreloader from "@/components/reduxpreloader";
 
 export default async function ListbarItems() {
   const notes = await getNotes()
+  store.dispatch(setNotes(notes));
+
   return (
     <>
+      <ReduxPreloader notes={notes} />
       <ListbarItemsClient notes={notes} />
     </>
   )
