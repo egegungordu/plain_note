@@ -32,16 +32,37 @@ export default function InteractiveNote({ note }: { note: Note }) {
     }
   }
 
-  // prevent the user from copying the html elements,
-  // and only copy the text
-  useEventListener("copy", (e) => {
-    if (!noteRef.current?.contains(e.target as Node)) return;
-    const text_only = document.getSelection()?.toString() ?? "";
-    const clipdata = e.clipboardData;
-    if (clipdata === null) return;
-    clipdata.setData('text/plain', text_only);
-    clipdata.setData('text/html', text_only);
+  // prevent the user from pasting html elements,
+  // and only paste the text
+  useEventListener("paste", (e) => {
     e.preventDefault();
+    const text_only = e.clipboardData
+      ? e.clipboardData.getData('text/plain')
+      : // For IE
+      // @ts-ignore
+      window.clipboardData
+        // @ts-ignore
+        ? window.clipboardData.getData('Text')
+        : '';
+
+    if (document.queryCommandSupported('insertText')) {
+      // document.execCommand('insertText', false, text_only);
+      document.execCommand("insertText", false, text_only.trim());
+    } else {
+      // if the browser doesn't support insertText,
+      // this prevents screws up the undo stack
+      if (!noteRef.current?.contains(e.target as Node)) return;
+      const text_only = e.clipboardData?.getData('text/plain') ?? "";
+      const clipdata = e.clipboardData;
+      if (clipdata === null) return;
+      const selection = window.getSelection();
+      if (selection === null) return;
+      if (selection.rangeCount) {
+        selection.getRangeAt(0).insertNode(document.createTextNode(text_only));
+        selection.collapseToEnd();
+      }
+      e.preventDefault();
+    }
   })
 
   return (
