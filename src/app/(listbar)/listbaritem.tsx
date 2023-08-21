@@ -5,11 +5,33 @@ import { clsx } from 'clsx';
 import { usePathname } from 'next/navigation';
 import { TbHeart, TbTrash } from "react-icons/tb";
 import { deleteNote } from "../serveractions";
+import { useSelector, type TypedUseSelectorHook } from "react-redux"
+import { RootState } from "@/store"
+
+const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
 export default function ListbarItem({ note }: { note: SmallNote }) {
   const pathname = usePathname();
   const id = pathname.split("/")[2];
   const selected = id === note.id;
+
+  const title = useAppSelector((state) => {
+    const editedNote = state.notes.editedNotesBuffer[note.id]
+    if (editedNote) {
+      return editedNote.title;
+    } else {
+      return note.title;
+    }
+  });
+
+  const shortContent = useAppSelector((state) => {
+    const editedNote = state.notes.editedNotesBuffer[note.id]
+    if (editedNote) {
+      return editedNote.content;
+    } else {
+      return note.shortContent;
+    }
+  })
 
   return (
     <li
@@ -19,7 +41,7 @@ export default function ListbarItem({ note }: { note: SmallNote }) {
         <div className="pl-8 pr-4 py-3 flex items-center justify-start">
           <div className="flex flex-col items-center justify-center">
             <h2 placeholder="Untitled" className="text-neutral-300 w-64 group-hover:w-48 text-sm font-semibold overflow-ellipsis overflow-hidden whitespace-nowrap empty:after:content-[attr(placeholder)]">
-              {note.title}
+              {title}
             </h2>
 
             <div className="flex items-center mt-1 w-64 group-hover:w-48">
@@ -28,7 +50,7 @@ export default function ListbarItem({ note }: { note: SmallNote }) {
               </span>
 
               <p className="text-neutral-500 text-xs ml-2 overflow-ellipsis overflow-hidden whitespace-nowrap group-hover:hidden">
-                {note.shortContent}
+                {shortContent}
               </p>
 
               <span className="text-neutral-500 text-xs ml-2 hidden group-hover:block">
