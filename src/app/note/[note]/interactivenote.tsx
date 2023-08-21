@@ -23,15 +23,10 @@ export default function InteractiveNote({ note }: { note: Note }) {
   }
 
   const handleTitleInput = (e: React.ChangeEvent<HTMLHeadingElement>) => {
-    const title = e.currentTarget.textContent ?? ""
-    const id = note.id
-    const editedNote = {
-      title,
-      content: note.content ?? "",
-    }
-
     dispatch(editNote({
-      id, editedNote
+      id: note.id,
+      title: e.currentTarget.textContent ?? "",
+      content: store.getState().notes.editedNotesBuffer[note.id]?.content ?? note.content,
     }))
   }
 
@@ -52,15 +47,10 @@ export default function InteractiveNote({ note }: { note: Note }) {
       e.currentTarget.innerHTML = ""
     }
 
-    const content = e.currentTarget.textContent ?? ""
-    const id = note.id
-    const editedNote = {
-      title: note.title ?? "",
-      content,
-    }
-
     dispatch(editNote({
-      id, editedNote
+      id: note.id,
+      title: store.getState().notes.editedNotesBuffer[note.id]?.title ?? note.title,
+      content: e.currentTarget.textContent ?? "",
     }))
   }
 

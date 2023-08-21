@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import type { SmallNote } from "@/app/(listbar)/listbaritems";
 
 export interface EditedNote {
+  id: string;
   title: string;
   content: string;
 }
@@ -24,18 +25,18 @@ const notesSlice = createSlice({
     setNotes(state, action: PayloadAction<SmallNote[]>) {
       state.notes = action.payload;
     },
-    editNote(
-      state,
-      action: PayloadAction<{ id: string; editedNote: EditedNote }>
-    ) {
-      const { id, editedNote } = action.payload;
+    addNote(state, action: PayloadAction<SmallNote>) {
+      state.notes = [action.payload, ...state.notes];
+    },
+    editNote(state, action: PayloadAction<EditedNote>) {
+      const id = action.payload.id;
       state.editedNotesBuffer = {
         ...state.editedNotesBuffer,
-        [id]: editedNote,
+        [id]: action.payload,
       };
     },
   },
 });
 
-export const { setNotes, editNote } = notesSlice.actions;
+export const { setNotes, editNote, addNote } = notesSlice.actions;
 export default notesSlice.reducer;

@@ -12,7 +12,6 @@ export default function LoggedInProfile({ user }: { user: Session["user"] }) {
 
   return (
     <TooltipElement onClick={() => {
-      console.log(count);
       setCount((prev) => prev + 1);
     }} as="button" text={name ?? ""} className="mt-auto w-72 bg-neutral-900 hover:bg-neutral-800 transition-colors border-t border-t-neutral-800 px-6 py-4 flex items-center justify-start">
       <div className="relative">
