@@ -8,5 +8,6 @@ export default function note2small(note: Note): SmallNote {
     shortContent: note.content ? note.content.slice(0, 64) : "",
     createdAt: note.createdAt,
     updatedAt: note.updatedAt,
+    isFavorite: note.isFavorite,
   };
 }
