@@ -2,10 +2,11 @@
 
 import { Note } from "@prisma/client"
 import { useTransition } from "react"
-import { TbArrowsMaximize, TbArrowsMinimize, TbDeviceFloppy, TbDots } from "react-icons/tb"
+import { TbArrowsMaximize, TbArrowsMinimize, TbCross, TbDeviceFloppy, TbDots, TbX } from "react-icons/tb"
 import { useSelector, useDispatch, type TypedUseSelectorHook } from "react-redux"
 import { RootState, AppDispatch } from "@/store"
 import { setIsFullscreen } from "@/store/uiSlice"
+import { useRouter } from "next/navigation"
 
 async function saveNote({ id, title, content }: { id: string, title: string, content: string }) {
   const res = await fetch('/api/note/update', {
@@ -30,6 +31,7 @@ export default function InteractiveHeader({ note }: { note: Note }) {
   const [isPending, startTransition] = useTransition();
   const isFullscreen = useAppSelector((state) => state.ui.isFullscreen)
   const dispatch = useAppDispatch()
+  const router = useRouter()
 
   const getNoteState = () => {
     // this is not react style, but whatever
@@ -41,6 +43,11 @@ export default function InteractiveHeader({ note }: { note: Note }) {
       content: content.textContent ?? ""
     }
   }
+
+  const handleClose = () => {
+    router.push("/")
+  }
+
   const handleSave = () => {
     const { title, content } = getNoteState()
     const id = note.id
@@ -71,6 +78,10 @@ export default function InteractiveHeader({ note }: { note: Note }) {
 
   return (
     <section className="mt-2 flex items-center px-4 py-2.5 w-full text-neutral-300 focus:outline-none">
+      <button onClick={handleClose} className="flex text-sm items-center justify-center p-2.5 rounded-full hover:bg-neutral-800">
+        <TbX className="w-4 h-4" />
+      </button>
+
       <button onClick={handleSave} className="flex text-sm items-center justify-center px-4 py-2 rounded-full hover:bg-neutral-800">
         <TbDeviceFloppy className="w-5 h-5 mr-2" />
         Save
@@ -91,6 +102,5 @@ export default function InteractiveHeader({ note }: { note: Note }) {
       <button className="flex text-sm items-center justify-center p-2.5 rounded-full hover:bg-neutral-800">
         <TbDots className="w-4 h-4" />
       </button>
-    </section>
-  )
+    </section>)
 }
