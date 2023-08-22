@@ -85,11 +85,9 @@ export default function ListbarItem({ index, note }: { index: number, note: Smal
     dispatch(deleteStoreNote(note.id))
     if (selected) {
       const nextNoteIndex = index; // because this note will be deleted
-      const nextNote = store.getState().notes.notes.at(nextNoteIndex);
+      const nextNote = store.getState().notes.notes[nextNoteIndex]
       const prevNoteIndex = index - 1;
-      const prevNote = store.getState().notes.notes.at(prevNoteIndex);
-
-      console.log(nextNote?.id, prevNote?.id)
+      const prevNote = store.getState().notes.notes[prevNoteIndex]
 
       if (nextNote) {
         router.push(`/note/${nextNote.id}`)
