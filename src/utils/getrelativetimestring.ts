@@ -1,4 +1,4 @@
-export function getRelativeTimeString(
+export default function getRelativeTimeString(
   date: Date | number,
   lang = navigator.language
 ): string {

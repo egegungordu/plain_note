@@ -8,7 +8,7 @@ import { RootState, AppDispatch } from "@/store"
 import { setIsFullscreen } from "@/store/uiSlice"
 import { updateStoreNote } from "@/store/notesSlice"
 import { useRouter } from "next/navigation"
-import { getRelativeTimeString } from "@/utils/getrelativetimestring"
+import { getRelativeTimeString } from "@/utils"
 import { trpc } from "@/app/(trpc)/client"
 
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
@@ -49,8 +49,6 @@ export default function InteractiveHeader({ note }: { note: Note }) {
         content,
       })
       if (!note) return
-      note.updatedAt = new Date(note.updatedAt)
-      note.createdAt = new Date(note.createdAt)
       dispatch(updateStoreNote(note));
       setLastSavedString(getRelativeTimeString(note.updatedAt))
     })
