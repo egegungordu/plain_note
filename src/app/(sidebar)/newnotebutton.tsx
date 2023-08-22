@@ -8,30 +8,13 @@ import { AppDispatch } from "@/store"
 import { addStoreNote } from "@/store/notesSlice"
 import { note2small } from "@/utils"
 import { Note } from "@prisma/client"
+import { trpc } from "../(trpc)/client"
 
 const useAppDispatch = () => useDispatch<AppDispatch>()
 
-async function createNote() {
-  const res = await fetch('/api/note/create', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({})
-  })
-  if (!res.ok) {
-    console.error(res.statusText)
-    return null
-  }
-  const note = await res.json();
-  note.createdAt = new Date(note.createdAt)
-  note.updatedAt = new Date(note.updatedAt)
-  return note as Note
-}
-
-
 export default function NewNoteButton() {
   const [isPending, startTransition] = useTransition();
+  const createNote = trpc.note.create.useMutation();
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -39,8 +22,7 @@ export default function NewNoteButton() {
     <button
       onClick={() => {
         startTransition(async () => {
-          const note = await createNote()
-          console.log(note)
+          const note = await createNote.mutateAsync();
           if (!note) return
           setTimeout(() => {
             router.push(`/note/${note.id}`)

@@ -1,33 +1,15 @@
 import ListbarItemsClient from "./listbaritemsclient";
-import { Note } from "@prisma/client";
-import { headers } from "next/headers";
-import { getApiUrl } from "@/app/api/util"
-
-async function getNotes() {
-  const res = await fetch(getApiUrl('/api/note/get'), {
-    method: 'GET',
-    headers: headers()
-  })
-  if (!res.ok) {
-    console.error(res.statusText)
-    return [] as Note[]
-  }
-
-  const notes = ((await res.json()) ?? []);
-  notes.forEach((note: any) => {
-    note.createdAt = new Date(note.createdAt)
-    note.updatedAt = new Date(note.updatedAt)
-  })
-  return notes as Note[]
-}
-
-export type SmallNote = Awaited<ReturnType<typeof getNotes>>[number]
 import { store } from "@/store";
 import { setStoreNotes } from "@/store/notesSlice";
 import ReduxPreloader from "@/components/reduxpreloader";
+import { serverClient } from "../(trpc)/serverClient";
+import type { inferRouterOutputs } from '@trpc/server';
+import type { AppRouter } from "@/server";
+
+export type SmallNote = inferRouterOutputs<AppRouter>['note']['get'][number]
 
 export default async function ListbarItems() {
-  const notes = await getNotes()
+  const notes = await serverClient.note.get();
   store.dispatch(setStoreNotes(notes));
 
   return (

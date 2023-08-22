@@ -5,24 +5,7 @@ import InteractiveNote from "./interactivenote"
 import InteractiveHeader from "./interactiveheader";
 import { Suspense } from "react";
 import { TbArrowsMaximize, TbDeviceFloppy, TbDots, TbX } from "react-icons/tb";
-
-async function getNoteById(id: string) {
-  "use server"
-
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return null
-  }
-
-  const owner = session.user?.email!;
-
-  const note = await prisma.note.findUniqueOrThrow({
-    where: { id, owner }
-  });
-
-  return note;
-}
+import { serverClient } from "@/app/(trpc)/serverClient";
 
 export default async function Note({
   params,
@@ -42,12 +25,12 @@ export default async function Note({
 }
 
 async function Header({ id }: { id: string }) {
-  const note = (await getNoteById(id))!;
+  const note = (await serverClient.note.getById({ id }))!;
   return <InteractiveHeader note={note} />
 }
 
 async function NoteContent({ id }: { id: string }) {
-  const note = (await getNoteById(id))!;
+  const note = (await serverClient.note.getById({ id }))!;
   return <InteractiveNote note={note} />
 }
 
@@ -73,7 +56,7 @@ function HeaderSkeleton() {
         Save
       </button>
 
-      <span className="ml-1 animate-pulse w-20 h-6 text-xs bg-neutral-800 mt-0.5" />
+      <span className="ml-1 animate-pulse w-20 h-6 text-xs bg-neutral-800 mt-0.5 rounded" />
 
       <button disabled className="disabled:opacity-50 ml-auto flex text-sm items-center justify-center p-2.5 rounded-full hover:bg-neutral-800">
         <TbArrowsMaximize className="w-4 h-4" />

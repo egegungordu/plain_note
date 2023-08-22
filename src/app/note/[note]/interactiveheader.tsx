@@ -1,37 +1,26 @@
 "use client"
 
 import { Note } from "@prisma/client"
-import { useTransition } from "react"
+import { useState, useCallback, useTransition } from "react"
 import { TbArrowsMaximize, TbArrowsMinimize, TbCross, TbDeviceFloppy, TbDots, TbX } from "react-icons/tb"
 import { useSelector, useDispatch, type TypedUseSelectorHook } from "react-redux"
 import { RootState, AppDispatch } from "@/store"
 import { setIsFullscreen } from "@/store/uiSlice"
+import { updateStoreNote } from "@/store/notesSlice"
 import { useRouter } from "next/navigation"
-
-async function saveNote({ id, title, content }: { id: string, title: string, content: string }) {
-  const res = await fetch('/api/note/update', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ id, title, content })
-  })
-  if (!res.ok) {
-    console.error(res.statusText)
-    return null
-  }
-
-  return (await res.json()) as Note;
-}
+import { getRelativeTimeString } from "@/utils/getrelativetimestring"
+import { trpc } from "@/app/(trpc)/client"
 
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 const useAppDispatch = () => useDispatch<AppDispatch>()
 
 export default function InteractiveHeader({ note }: { note: Note }) {
   const [isPending, startTransition] = useTransition();
+  const [lastSavedString, setLastSavedString] = useState("");
   const isFullscreen = useAppSelector((state) => state.ui.isFullscreen)
   const dispatch = useAppDispatch()
   const router = useRouter()
+  const saveNote = trpc.note.update.useMutation()
 
   const getNoteState = () => {
     // this is not react style, but whatever
@@ -53,11 +42,16 @@ export default function InteractiveHeader({ note }: { note: Note }) {
     const id = note.id
 
     startTransition(async () => {
-      const note = await saveNote({
+      const note = await saveNote.mutateAsync({
         id,
         title,
         content,
       })
+      if (!note) return
+      note.updatedAt = new Date(note.updatedAt)
+      note.createdAt = new Date(note.createdAt)
+      dispatch(updateStoreNote(note));
+      setLastSavedString(getRelativeTimeString(note.updatedAt))
     })
   }
 
@@ -88,7 +82,7 @@ export default function InteractiveHeader({ note }: { note: Note }) {
       </button>
 
       <span className="ml-1 text-xs text-neutral-400 mt-0.5 overflow-hidden whitespace-nowrap">
-        {isPending ? "Saving..." : "Last saved 2 minutes ago"}
+        {isPending ? "saving..." : `last saved ${lastSavedString}`}
       </span>
 
       <button onClick={handleToggleFullscreen} className="ml-auto flex text-sm items-center justify-center p-2.5 rounded-full hover:bg-neutral-800">

@@ -7,6 +7,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from "@/app/api/auth/[...nextauth]/authoptions"
 import AuthProvider from '@/components/nextauthprovider'
 import ReduxProvider from '@/components/reduxprovider'
+import TRPCProvider from '@/components/trpcprovider'
 
 export const metadata: Metadata = {
   title: 'Plain Note',
@@ -31,13 +32,15 @@ export default async function RootLayout({
       <body
         className={`${inter.variable} font-sans bg-black flex h-screen`}
       >
-        <ReduxProvider>
-          <AuthProvider session={session}>
-            <Sidebar />
-            <Listbar />
-            {children}
-          </AuthProvider>
-        </ReduxProvider>
+        <TRPCProvider>
+          <ReduxProvider>
+            <AuthProvider session={session}>
+              <Sidebar />
+              <Listbar />
+              {children}
+            </AuthProvider>
+          </ReduxProvider>
+        </TRPCProvider>
       </body>
     </html>
   )

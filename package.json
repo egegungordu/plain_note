@@ -12,6 +12,10 @@
   "dependencies": {
     "@prisma/client": "^5.1.1",
     "@reduxjs/toolkit": "^1.9.5",
+    "@tanstack/react-query": "^4.33.0",
+    "@trpc/client": "^10.37.1",
+    "@trpc/react-query": "^10.37.1",
+    "@trpc/server": "^10.37.1",
     "@types/node": "20.5.0",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
@@ -27,9 +31,11 @@
     "react-icons": "^4.10.1",
     "react-redux": "^8.1.2",
     "redux": "^4.2.1",
+    "superjson": "^1.13.1",
     "tailwindcss": "3.3.3",
     "typescript": "5.1.6",
-    "usehooks-ts": "^2.9.1"
+    "usehooks-ts": "^2.9.1",
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "prettier": "^3.0.2",

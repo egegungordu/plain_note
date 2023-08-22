@@ -4,45 +4,15 @@ import { SmallNote } from "./listbaritems"
 import { clsx } from 'clsx';
 import { usePathname } from 'next/navigation';
 import { TbHeart, TbHeartFilled, TbTrash } from "react-icons/tb";
-import { deleteStoreNote, editStoreNote } from "@/store/notesSlice"
-import { Note } from "@prisma/client";
+import { deleteStoreNote, updateStoreNote } from "@/store/notesSlice"
 import { useSelector, useDispatch, type TypedUseSelectorHook } from "react-redux"
 import { store, RootState, AppDispatch } from "@/store"
 import TooltipElement from "@/components/tooltipelement";
 import { useRouter } from "next/navigation";
+import { trpc } from "../(trpc)/client";
 
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 const useAppDispatch = () => useDispatch<AppDispatch>()
-
-async function saveNote({ id, title, content, isFavorite }: { id: string, title?: string, content?: string, isFavorite?: boolean }) {
-  const res = await fetch('/api/note/update', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ id, title, content, isFavorite })
-  })
-  if (!res.ok) {
-    console.error(res.statusText)
-    return null
-  }
-
-  return (await res.json()) as Note;
-}
-
-async function deleteNote(id: string) {
-  const res = await fetch('/api/note/delete', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ id })
-  })
-  if (!res.ok) {
-    console.error(res.statusText)
-    return null
-  }
-}
 
 export default function ListbarItem({ index, note }: { index: number, note: SmallNote }) {
   const pathname = usePathname();
@@ -50,6 +20,8 @@ export default function ListbarItem({ index, note }: { index: number, note: Smal
   const selected = id === note.id;
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const deleteNote = trpc.note.delete.useMutation();
+  const saveNote = trpc.note.update.useMutation();
 
   const title = useAppSelector((state) => {
     const editedNote = state.notes.editedNotesBuffer[note.id]
@@ -81,7 +53,7 @@ export default function ListbarItem({ index, note }: { index: number, note: Smal
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
-    deleteNote(note.id);
+    deleteNote.mutate({ id: note.id })
     dispatch(deleteStoreNote(note.id))
     if (selected) {
       const nextNoteIndex = index; // because this note will be deleted
@@ -102,11 +74,11 @@ export default function ListbarItem({ index, note }: { index: number, note: Smal
   const handleToggleFavorite = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
-    saveNote({
+    saveNote.mutate({
       id: note.id,
       isFavorite: !isFavorite,
     })
-    dispatch(editStoreNote({
+    dispatch(updateStoreNote({
       id: note.id,
       isFavorite: !isFavorite,
     }))

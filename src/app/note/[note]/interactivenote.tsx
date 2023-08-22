@@ -3,7 +3,7 @@
 import { Note } from "@prisma/client"
 import { FormEventHandler, useEffect, useLayoutEffect, useRef, useState, useTransition } from "react"
 import { useEffectOnce, useEventListener } from "usehooks-ts"
-import { editStoreNote } from "@/store/notesSlice"
+import { updateStoreNote } from "@/store/notesSlice"
 import { useSelector, useDispatch, TypedUseSelectorHook } from "react-redux"
 import { store, AppDispatch, RootState } from "@/store"
 import clsx from "clsx"
@@ -37,7 +37,7 @@ export default function InteractiveNote({ note }: { note: Note }) {
   }
 
   const handleTitleInput = (e: React.ChangeEvent<HTMLHeadingElement>) => {
-    dispatch(editStoreNote({
+    dispatch(updateStoreNote({
       id: note.id,
       title: e.currentTarget.textContent ?? "",
     }))
@@ -60,7 +60,7 @@ export default function InteractiveNote({ note }: { note: Note }) {
       e.currentTarget.innerHTML = ""
     }
 
-    dispatch(editStoreNote({
+    dispatch(updateStoreNote({
       id: note.id,
       content: e.currentTarget.textContent ?? "",
     }))

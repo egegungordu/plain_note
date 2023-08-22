@@ -1,17 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { SmallNote } from "@/app/(listbar)/listbaritems";
-
-export interface EditedNote {
-  id: string;
-  title?: string;
-  content?: string;
-  isFavorite?: boolean;
-}
+import { Note } from "@prisma/client";
 
 export interface NotesState {
   notes: SmallNote[];
-  editedNotesBuffer: Record<string, EditedNote>;
+  editedNotesBuffer: Record<string, Note>;
 }
 
 const initialState: NotesState = {
@@ -32,9 +26,9 @@ const notesSlice = createSlice({
     deleteStoreNote(state, action: PayloadAction<string>) {
       state.notes = state.notes.filter((note) => note.id !== action.payload);
     },
-    editStoreNote(
+    updateStoreNote(
       state,
-      action: PayloadAction<Partial<EditedNote> & Pick<EditedNote, "id">>
+      action: PayloadAction<Partial<Note> & Pick<Note, "id">>
     ) {
       const id = action.payload.id;
       state.editedNotesBuffer = {
@@ -48,6 +42,6 @@ const notesSlice = createSlice({
   },
 });
 
-export const { setStoreNotes, editStoreNote, addStoreNote, deleteStoreNote } =
+export const { setStoreNotes, updateStoreNote, addStoreNote, deleteStoreNote } =
   notesSlice.actions;
 export default notesSlice.reducer;
