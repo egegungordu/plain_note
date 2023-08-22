@@ -1,31 +1,23 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/authoptions"
-import { prisma } from "@/db"
 import ListbarItemsClient from "./listbaritemsclient";
+import { Note } from "@prisma/client";
+import { headers } from "next/headers";
 
 async function getNotes() {
-  const session = await getServerSession(authOptions);
-
-  const notes = await prisma.note.findMany({
-    orderBy: {
-      createdAt: "desc"
-    },
-    where: {
-      owner: {
-        equals: session?.user?.email ?? "unknown"
-      }
-    },
-    select: {
-      id: true,
-      title: true,
-      shortContent: true,
-      createdAt: true,
-      updatedAt: true,
-      isFavorite: true,
-    }
+  const res = await fetch(`${process.env.URL}/api/note/get`, {
+    method: 'GET',
+    headers: headers()
   })
+  if (!res.ok) {
+    console.error(res.statusText)
+    return [] as Note[]
+  }
 
-  return notes;
+  const notes = ((await res.json()) ?? []);
+  notes.forEach((note: any) => {
+    note.createdAt = new Date(note.createdAt)
+    note.updatedAt = new Date(note.updatedAt)
+  })
+  return notes as Note[]
 }
 
 export type SmallNote = Awaited<ReturnType<typeof getNotes>>[number]

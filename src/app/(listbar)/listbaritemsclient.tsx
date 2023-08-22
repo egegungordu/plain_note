@@ -14,8 +14,8 @@ export default function ListbarItemsClient() {
     <ul id="listbar" className="flex flex-col items-center justify-start mt-4 divide-y divide-neutral-800 overflow-auto">
       {/* <button onClick={() => scrollTo("6addb185-f725-44e2-92df-a8d168eb68e5")}>Scroll to 1</button> */}
       {/* <div aria-hidden={true} className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-neutral-600/60" /> */}
-      {storeNotes.map((note) => (
-        <ListbarItem key={note.id} note={note} data-id={note.id} />
+      {storeNotes.map((note, index) => (
+        <ListbarItem index={index} key={note.id} note={note} data-id={note.id} />
       ))}
     </ul>
   )

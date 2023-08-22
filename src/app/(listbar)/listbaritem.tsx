@@ -5,20 +5,51 @@ import { clsx } from 'clsx';
 import { usePathname } from 'next/navigation';
 import { TbHeart, TbHeartFilled, TbTrash } from "react-icons/tb";
 import { deleteStoreNote, editStoreNote } from "@/store/notesSlice"
+import { Note } from "@prisma/client";
 import { useSelector, useDispatch, type TypedUseSelectorHook } from "react-redux"
 import { store, RootState, AppDispatch } from "@/store"
-import { deleteNote } from "../serveractions";
-import { saveNote } from "../note/[note]/serveractions";
 import TooltipElement from "@/components/tooltipelement";
+import { useRouter } from "next/navigation";
 
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 const useAppDispatch = () => useDispatch<AppDispatch>()
 
-export default function ListbarItem({ note }: { note: SmallNote }) {
+async function saveNote({ id, title, content, isFavorite }: { id: string, title?: string, content?: string, isFavorite?: boolean }) {
+  const res = await fetch('/api/note/update', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id, title, content, isFavorite })
+  })
+  if (!res.ok) {
+    console.error(res.statusText)
+    return null
+  }
+
+  return (await res.json()) as Note;
+}
+
+async function deleteNote(id: string) {
+  const res = await fetch('/api/note/delete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id })
+  })
+  if (!res.ok) {
+    console.error(res.statusText)
+    return null
+  }
+}
+
+export default function ListbarItem({ index, note }: { index: number, note: SmallNote }) {
   const pathname = usePathname();
   const id = pathname.split("/")[2];
   const selected = id === note.id;
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const title = useAppSelector((state) => {
     const editedNote = state.notes.editedNotesBuffer[note.id]
@@ -52,6 +83,22 @@ export default function ListbarItem({ note }: { note: SmallNote }) {
     e.stopPropagation();
     deleteNote(note.id);
     dispatch(deleteStoreNote(note.id))
+    if (selected) {
+      const nextNoteIndex = index; // because this note will be deleted
+      const nextNote = store.getState().notes.notes.at(nextNoteIndex);
+      const prevNoteIndex = index - 1;
+      const prevNote = store.getState().notes.notes.at(prevNoteIndex);
+
+      console.log(nextNote?.id, prevNote?.id)
+
+      if (nextNote) {
+        router.push(`/note/${nextNote.id}`)
+      } else if (prevNote) {
+        router.push(`/note/${prevNote.id}`)
+      } else {
+        router.push("/")
+      }
+    }
   }
 
   const handleToggleFavorite = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

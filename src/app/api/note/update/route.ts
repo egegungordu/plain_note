@@ -1,20 +1,11 @@
-"use server";
-
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/db";
+import { authOptions } from "../../auth/[...nextauth]/authoptions";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/authoptions";
 
-export async function saveNote({
-  id,
-  title,
-  content,
-  isFavorite,
-}: {
-  id: string;
-  title?: string;
-  content?: string;
-  isFavorite?: boolean;
-}) {
+export async function POST(request: NextRequest) {
+  const req = await request.json();
+  const { id, content, title, isFavorite } = req;
   const session = await getServerSession(authOptions);
   const owner = session?.user?.email;
   if (!owner) return;
@@ -23,6 +14,5 @@ export async function saveNote({
     where: { id, owner },
     data: { title, content, shortContent, isFavorite },
   });
-
-  return note;
+  return NextResponse.json(note);
 }

@@ -1,15 +1,34 @@
 "use client"
 
-import { TbLoader, TbLoader2, TbPencil } from "react-icons/tb"
-import { createNote } from "./serveractions"
+import { TbLoader2, TbPencil } from "react-icons/tb"
 import { useTransition } from 'react'
 import { useRouter } from "next/navigation"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store"
 import { addStoreNote } from "@/store/notesSlice"
 import { note2small } from "@/utils"
+import { Note } from "@prisma/client"
 
 const useAppDispatch = () => useDispatch<AppDispatch>()
+
+async function createNote() {
+  const res = await fetch('/api/note/create', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({})
+  })
+  if (!res.ok) {
+    console.error(res.statusText)
+    return null
+  }
+  const note = await res.json();
+  note.createdAt = new Date(note.createdAt)
+  note.updatedAt = new Date(note.updatedAt)
+  return note as Note
+}
+
 
 export default function NewNoteButton() {
   const [isPending, startTransition] = useTransition();
@@ -21,11 +40,12 @@ export default function NewNoteButton() {
       onClick={() => {
         startTransition(async () => {
           const note = await createNote()
+          console.log(note)
           if (!note) return
-          dispatch(addStoreNote(note2small(note)))
           setTimeout(() => {
             router.push(`/note/${note.id}`)
           }, 0)
+          dispatch(addStoreNote(note2small(note)))
         })
       }}
       disabled={isPending}

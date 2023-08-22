@@ -1,12 +1,27 @@
 "use client"
 
 import { Note } from "@prisma/client"
-import { saveNote } from "./serveractions"
-import { useTransition, useState } from "react"
+import { useTransition } from "react"
 import { TbArrowsMaximize, TbArrowsMinimize, TbDeviceFloppy, TbDots } from "react-icons/tb"
 import { useSelector, useDispatch, type TypedUseSelectorHook } from "react-redux"
 import { RootState, AppDispatch } from "@/store"
 import { setIsFullscreen } from "@/store/uiSlice"
+
+async function saveNote({ id, title, content }: { id: string, title: string, content: string }) {
+  const res = await fetch('/api/note/update', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id, title, content })
+  })
+  if (!res.ok) {
+    console.error(res.statusText)
+    return null
+  }
+
+  return (await res.json()) as Note;
+}
 
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 const useAppDispatch = () => useDispatch<AppDispatch>()
