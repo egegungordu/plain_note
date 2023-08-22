@@ -102,7 +102,7 @@ export default function InteractiveNote({ note }: { note: Note }) {
   return (
     <div ref={noteRef} className={
       clsx(
-        isFullscreen && "px-32",
+        isFullscreen && "px-8 md:px-16 lg:px-32",
         "py-8 w-full max-w-full h-full overflow-auto flex flex-col"
       )}>
       <h1 id="note-title" placeholder="Untitled" onInput={handleTitleInput} onKeyDown={handleTitleKeyDown} spellCheck contentEditable suppressContentEditableWarning className="text-4xl px-8 mt-1 font-semibold text-neutral-300 empty:text-neutral-600 border-l-4 border-l-transparent focus:border-l-orange-700 focus:outline-none empty:after:content-[attr(placeholder)] empty:after:pointer-events-none hyphens-manual break-all">
