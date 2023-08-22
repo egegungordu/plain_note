@@ -15,7 +15,7 @@ async function getNoteById(id: string) {
 
   const owner = session.user?.email!;
 
-  const note = await prisma.note.findUnique({
+  const note = await prisma.note.findUniqueOrThrow({
     where: { id, owner }
   });
 
@@ -27,18 +27,7 @@ export default async function Note({
 }: {
   params: { note: string }
 }) {
-  const note = await getNoteById(params.note)
-
-  if (!note) {
-    return <div className="p-8 flex flex-col w-full justify-center items-center">
-      <h1 className="text-3xl font-semibold text-neutral-300">
-        Note not found
-      </h1>
-      <p className="text-neutral-400 mt-4">
-        This note does not exist or you do not have permission to view it.
-      </p>
-    </div>
-  }
+  const note = (await getNoteById(params.note))!;
 
   return (
     <section className="flex flex-col w-full h-full">
