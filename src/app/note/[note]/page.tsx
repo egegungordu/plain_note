@@ -4,7 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/authoptions";
 import InteractiveNote from "./interactivenote"
 import InteractiveHeader from "./interactiveheader";
 import { Suspense } from "react";
-import { TbArrowsMaximize, TbDeviceFloppy, TbDots } from "react-icons/tb";
+import { TbArrowsMaximize, TbDeviceFloppy, TbDots, TbX } from "react-icons/tb";
 
 async function getNoteById(id: string) {
   "use server"
@@ -64,6 +64,10 @@ function NoteSkeleton() {
 function HeaderSkeleton() {
   return (
     <div className="mt-2 flex items-center px-4 py-2.5 w-full text-neutral-300 focus:outline-none">
+      <button disabled className="disabled:opacity-50 flex text-sm items-center justify-center p-2.5 rounded-full hover:bg-neutral-800">
+        <TbX className="w-4 h-4" />
+      </button>
+
       <button disabled className="disabled:opacity-50 flex text-sm items-center justify-center px-4 py-2 rounded-full hover:bg-neutral-800">
         <TbDeviceFloppy className="w-5 h-5 mr-2" />
         Save
