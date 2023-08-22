@@ -1,9 +1,10 @@
 import ListbarItemsClient from "./listbaritemsclient";
 import { Note } from "@prisma/client";
 import { headers } from "next/headers";
+import { getApiUrl } from "@/app/api/util"
 
 async function getNotes() {
-  const res = await fetch(`${process.env.URL}/api/note/get`, {
+  const res = await fetch(getApiUrl('/api/note/get'), {
     method: 'GET',
     headers: headers()
   })
