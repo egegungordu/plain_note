@@ -35,6 +35,7 @@ export default function InteractiveHeader({ note }: { note: Note }) {
 
   const handleClose = () => {
     router.push("/")
+    if (isFullscreen) handleToggleFullscreen()
   }
 
   const handleSave = () => {
