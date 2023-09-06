@@ -16,6 +16,15 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-inter)"],
       },
+      keyframes: {
+        wave: {
+          "0%, 5%, 10%": { transform: "rotate(0deg)" },
+          "2.5%, 7.5%": { transform: "rotate(30deg)" },
+        },
+      },
+      animation: {
+        wave: "wave 8s ease-in-out infinite",
+      },
     },
   },
   plugins: [],
