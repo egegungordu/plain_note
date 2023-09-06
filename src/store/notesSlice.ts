@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { Folder, SmallNote } from "@/app/actions";
-import { Note } from "@prisma/client";
+import { Note } from "@/app/actions";
 
 interface SaveableNote extends Note {
   saved: boolean;

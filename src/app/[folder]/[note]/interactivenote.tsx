@@ -1,6 +1,6 @@
 "use client";
 
-import { Note } from "@prisma/client";
+import { Note } from "@/app/actions";
 import {
   FormEventHandler,
   useEffect,

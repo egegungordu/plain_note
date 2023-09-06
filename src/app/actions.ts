@@ -63,6 +63,7 @@ export async function getNotes({
   return notes;
 }
 
+export type Note = NonNullable<Awaited<ReturnType<typeof getNoteById>>>;
 export async function getNoteById(id: string) {
   const session = await getServerSession(authOptions);
   const owner = session?.user?.email;
@@ -71,6 +72,9 @@ export async function getNoteById(id: string) {
     where: {
       id,
       owner,
+    },
+    include: {
+      folder: true,
     },
   });
   return note;

@@ -1,4 +1,4 @@
-import { Note } from "@prisma/client";
+import { Note } from "@/app/actions";
 import { SmallNote } from "@/app/actions";
 
 const SHORT_CONTENT_LENGTH = 64;
