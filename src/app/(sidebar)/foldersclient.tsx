@@ -69,7 +69,7 @@ function Folder({
 
       <button
         onClick={() => startDeleteTransition(() => handleDelete(folder.id))}
-        className="text-xs text-neutral-300 px-2 py-1 hidden absolute group-hover:flex right-4 top-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-neutral-800 hover:bg-neutral-700 focus:outline-none ml-2"
+        className="text-xs text-neutral-300 px-2 py-1 opacity-0 flex absolute group-hover:opacity-100 transition-opacity right-4 top-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-neutral-800 hover:bg-neutral-700 focus:outline-none ml-2"
       >
         Delete
       </button>
@@ -95,10 +95,10 @@ export default function FoldersClient() {
     await deleteFolder(id);
     const folders = await getFolders();
     dispatch(setStoreFolders(folders));
+    const notes = await getNotes({});
+    dispatch(setStoreNotes(notes));
     if (id === currentFolder) {
       dispatch(setStoreSearchResultInfo({ count: 0, query: "" }));
-      const notes = await getNotes({});
-      dispatch(setStoreNotes(notes));
       dispatch(setCurrentFolder("all"));
     }
   };

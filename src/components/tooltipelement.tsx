@@ -6,6 +6,7 @@ interface TooltipElement<T extends React.ElementType> {
   offset?: number;
   children?: React.ReactNode;
   className?: String;
+  hide?: boolean;
 }
 
 export default function TooltipElement<T extends React.ElementType = "div">({
@@ -14,18 +15,17 @@ export default function TooltipElement<T extends React.ElementType = "div">({
   offset,
   children,
   className,
+  hide,
   ...props
-}:
-  TooltipElement<T>
-  & Omit<React.ComponentPropsWithoutRef<T>, keyof TooltipElement<T>>
-) {
+}: TooltipElement<T> &
+  Omit<React.ComponentPropsWithoutRef<T>, keyof TooltipElement<T>>) {
   const Component = as || "div";
 
   return (
     <Component className={`relative group/tooltip ${className}`} {...props}>
       <span
         style={{
-          top: `-${offset ?? 16}px`
+          top: `-${offset ?? 16}px`,
         }}
         className={[
           "whitespace-nowrap",
@@ -48,7 +48,7 @@ export default function TooltipElement<T extends React.ElementType = "div">({
           "before:border-transparent",
           "before:border-t-black",
           "opacity-0",
-          "group-hover/tooltip:opacity-100",
+          !hide && "group-hover/tooltip:opacity-100",
           "transition",
           "pointer-events-none",
         ].join(" ")}
@@ -57,7 +57,5 @@ export default function TooltipElement<T extends React.ElementType = "div">({
       </span>
       {children}
     </Component>
-
-  )
-
+  );
 }
