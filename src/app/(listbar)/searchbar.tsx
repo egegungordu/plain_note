@@ -71,7 +71,8 @@ export function SearchbarResultInfo() {
     <p className="text-neutral-500 text-xs font-medium px-8 mt-2 break-all w-full">
       {showResultInfo && (
         <>
-          {count} result{count > 1 ? "s" : ""} for <span>"{query}"</span>
+          {count} result{count > 1 ? "s" : ""} for{" "}
+          <span>&quot;{query}&quot;</span>
         </>
       )}
     </p>
