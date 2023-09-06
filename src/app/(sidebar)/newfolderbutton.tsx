@@ -43,8 +43,20 @@ const NewFolderModal = ({
   const [name, setName] = useState("");
   const [color, setColor] = useState(COLORS[0]);
 
+  const handleClose = () => {
+    setName("");
+    setColor(COLORS[0]);
+    onClose();
+  };
+
+  const handleSubmit = () => {
+    onSubmit(name, color);
+    setName("");
+    setColor(COLORS[0]);
+  };
+
   return (
-    <CenteredModal onClose={onClose} show={show}>
+    <CenteredModal onClose={handleClose} show={show}>
       <div className="flex flex-col items-start justify-center py-6 px-6">
         <h1 className="text-lg font-semibold text-neutral-300">
           Create a new folder
@@ -80,19 +92,16 @@ const NewFolderModal = ({
 
         <div className="flex items-center justify-between gap-4 w-full mt-10">
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="flex items-center w-full justify-center px-4 py-2 rounded-full hover:bg-neutral-800 transition-colors"
           >
             <h1 className="text-sm text-neutral-300">Cancel</h1>
           </button>
 
           <button
-            onClick={() => {
-              onSubmit(name, color);
-              setName("");
-              setColor(COLORS[0]);
-            }}
-            className="border-2 w-full border-orange-700 px-4 py-2 rounded-full hover:bg-orange-700 transition-colors h-10 flex items-center justify-center disabled:opacity-70"
+            disabled={name === ""}
+            onClick={handleSubmit}
+            className="border-2 w-full border-orange-700 px-4 py-2 rounded-full hover:bg-orange-700 transition-colors h-10 flex items-center justify-center disabled:opacity-50"
           >
             <h1 className="text-sm text-neutral-300">Create</h1>
           </button>
