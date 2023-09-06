@@ -1,16 +1,29 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { SmallNote } from "@/app/(listbar)/listbaritems";
+import type { Folder, SmallNote } from "@/app/actions";
 import { Note } from "@prisma/client";
+
+interface SaveableNote extends Note {
+  saved: boolean;
+}
+type PartialSaveableNote = Partial<SaveableNote> &
+  Pick<SaveableNote, "id"> &
+  Pick<SaveableNote, "saved">;
 
 export interface NotesState {
   notes: SmallNote[];
-  editedNotesBuffer: Record<string, Note>;
+  folders: Folder[];
+  editedNotesBuffer: Record<string, PartialSaveableNote>;
+  searchResultInfo: { query: string; count: number };
+  currentFolder: string;
 }
 
 const initialState: NotesState = {
   notes: [],
+  folders: [],
   editedNotesBuffer: {},
+  searchResultInfo: { query: "", count: 0 },
+  currentFolder: "all",
 };
 
 const notesSlice = createSlice({
@@ -20,16 +33,10 @@ const notesSlice = createSlice({
     setStoreNotes(state, action: PayloadAction<SmallNote[]>) {
       state.notes = action.payload;
     },
-    addStoreNote(state, action: PayloadAction<SmallNote>) {
-      state.notes = [action.payload, ...state.notes];
-    },
     deleteStoreNote(state, action: PayloadAction<string>) {
       state.notes = state.notes.filter((note) => note.id !== action.payload);
     },
-    updateStoreNote(
-      state,
-      action: PayloadAction<Partial<Note> & Pick<Note, "id">>
-    ) {
+    updateStoreNote(state, action: PayloadAction<PartialSaveableNote>) {
       const id = action.payload.id;
       state.editedNotesBuffer = {
         ...state.editedNotesBuffer,
@@ -39,9 +46,27 @@ const notesSlice = createSlice({
         },
       };
     },
+    setStoreSearchResultInfo(
+      state,
+      action: PayloadAction<NotesState["searchResultInfo"]>
+    ) {
+      state.searchResultInfo = action.payload;
+    },
+    setStoreFolders(state, action: PayloadAction<Folder[]>) {
+      state.folders = action.payload;
+    },
+    setCurrentFolder(state, action: PayloadAction<string>) {
+      state.currentFolder = action.payload;
+    },
   },
 });
 
-export const { setStoreNotes, updateStoreNote, addStoreNote, deleteStoreNote } =
-  notesSlice.actions;
+export const {
+  setStoreNotes,
+  updateStoreNote,
+  deleteStoreNote,
+  setStoreSearchResultInfo,
+  setStoreFolders,
+  setCurrentFolder,
+} = notesSlice.actions;
 export default notesSlice.reducer;

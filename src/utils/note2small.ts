@@ -1,13 +1,19 @@
 import { Note } from "@prisma/client";
-import { SmallNote } from "@/app/(listbar)/listbaritems";
+import { SmallNote } from "@/app/actions";
 
-export default function note2small(note: Note): SmallNote {
-  return {
-    id: note.id,
-    title: note.title,
-    shortContent: note.content ? note.content.slice(0, 64) : "",
-    createdAt: note.createdAt,
-    updatedAt: note.updatedAt,
-    isFavorite: note.isFavorite,
-  };
+const SHORT_CONTENT_LENGTH = 64;
+
+export default function note2small(note: Note): SmallNote;
+export default function note2small(content: string): string;
+export default function note2small(note: Note | string): SmallNote | string {
+  if (typeof note === "string") {
+    return note.slice(0, SHORT_CONTENT_LENGTH);
+  } else {
+    return {
+      ...note,
+      shortContent: note.content
+        ? note.content.slice(0, SHORT_CONTENT_LENGTH)
+        : "",
+    };
+  }
 }

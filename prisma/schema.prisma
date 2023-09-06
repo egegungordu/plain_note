@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -13,11 +14,27 @@ datasource db {
 
 model Note {
   id           String   @id @default(uuid())
-  title        String?  @db.Text
+  title        String   @db.Text @default("Untitled")
   content      String?  @db.MediumText
   shortContent String?  @db.TinyText
   owner        String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   isFavorite   Boolean  @default(false)
+  folderId     String?
+  folder       Folder?  @relation(fields: [folderId], references: [id])
+
+  @@index([owner, folderId])
+  @@index([folderId], name: "folderId")
+}
+
+model Folder {
+  id          String   @id @default(uuid())
+  name        String
+  owner       String
+  createdAt   DateTime @default(now())
+  color       String
+  notes       Note[]
+
+  @@index([owner])
 }

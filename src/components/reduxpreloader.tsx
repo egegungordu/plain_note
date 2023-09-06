@@ -1,16 +1,26 @@
-"use client"
+"use client";
 
-import { useRef } from "react"
-import { store } from "@/store"
-import { setStoreNotes } from "@/store/notesSlice"
-import type { SmallNote } from "@/app/(listbar)/listbaritems";
+import { useRef } from "react";
+import { store } from "@/store";
+import { setStoreNotes, setStoreFolders } from "@/store/notesSlice";
+import type { Folder, SmallNote } from "@/app/actions";
 
-export default function ReduxPreloader({ notes }: { notes: SmallNote[] }) {
-  const loaded = useRef(false)
+export function ReduxNotesPreloader({ notes }: { notes: SmallNote[] }) {
+  const loaded = useRef(false);
   if (!loaded.current) {
-    store.dispatch(setStoreNotes(notes))
-    loaded.current = true
+    store.dispatch(setStoreNotes(notes));
+    loaded.current = true;
   }
 
-  return null
+  return null;
+}
+
+export function ReduxFoldersPreloader({ folders }: { folders: Folder[] }) {
+  const loaded = useRef(false);
+  if (!loaded.current) {
+    store.dispatch(setStoreFolders(folders));
+    loaded.current = true;
+  }
+
+  return null;
 }

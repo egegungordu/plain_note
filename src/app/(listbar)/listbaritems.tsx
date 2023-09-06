@@ -1,33 +1,26 @@
 import ListbarItemsClient from "./listbaritemsclient";
 import { store } from "@/store";
 import { setStoreNotes } from "@/store/notesSlice";
-import ReduxPreloader from "@/components/reduxpreloader";
-import { serverClient } from "../(trpc)/serverClient";
-import type { inferRouterOutputs } from '@trpc/server';
-import type { AppRouter } from "@/server";
-
-export type SmallNote = inferRouterOutputs<AppRouter>['note']['get'][number]
+import { ReduxNotesPreloader } from "@/components/reduxpreloader";
+import { getNotes } from "@/app/actions";
 
 export default async function ListbarItems() {
-  const notes = await serverClient.note.get();
+  const notes = await getNotes({});
   store.dispatch(setStoreNotes(notes));
 
   return (
     <>
-      <ReduxPreloader notes={notes} />
+      <ReduxNotesPreloader notes={notes} />
       <ListbarItemsClient />
     </>
-  )
+  );
 }
 
 export function ListbarItemsSkeleton() {
   return (
-    <ul className="flex flex-col animate-pulse items-center justify-start mt-4 divide-y divide-neutral-800">
+    <ul className="flex flex-col animate-pulse items-center justify-start mt-2 divide-y divide-neutral-800">
       {Array.from({ length: 5 }).map((_, index) => (
-        <li
-          key={index}
-          className="w-full  hover:bg-neutral-800/50"
-        >
+        <li key={index} className="w-full  hover:bg-neutral-800/50">
           <div className="px-8 py-3 ">
             <div className="w-40 h-4 bg-neutral-800 rounded" />
             <div className="flex items-center mt-2 w-64">
@@ -38,5 +31,5 @@ export function ListbarItemsSkeleton() {
         </li>
       ))}
     </ul>
-  )
+  );
 }
