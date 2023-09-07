@@ -14,7 +14,7 @@ datasource db {
 
 model Note {
   id           String   @id @default(uuid())
-  title        String   @db.Text @default("Untitled")
+  title        String   @db.Text 
   content      String?  @db.MediumText
   shortContent String?  @db.TinyText
   owner        String

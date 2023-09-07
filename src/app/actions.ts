@@ -89,7 +89,7 @@ export async function createNote(folderId?: string) {
   if (loggedIn) {
     const note = await prisma.note.create({
       data: {
-        title: "",
+        title: "Untitled",
         content: "",
         shortContent: "",
         owner,

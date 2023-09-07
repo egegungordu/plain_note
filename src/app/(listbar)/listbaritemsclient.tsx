@@ -9,6 +9,19 @@ const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export default function ListbarItemsClient() {
   const storeNotes = useAppSelector((state) => state.notes.notes);
+  const currentFolder = useAppSelector((state) => state.notes.currentFolder);
+  const isNotesEmpty = useAppSelector(
+    (state) =>
+      state.notes.notes.length === 0 &&
+      state.notes.searchResultInfo.query === ""
+  );
+
+  const noNotesMessage =
+    currentFolder === "all"
+      ? "You have no notes yet."
+      : currentFolder === "favorites"
+      ? "You have no favorite notes yet."
+      : "You have no notes in this folder yet.";
 
   return (
     <ul
@@ -25,6 +38,12 @@ export default function ListbarItemsClient() {
           data-id={note.id}
         />
       ))}
+
+      {isNotesEmpty && (
+        <li className="w-full">
+          <p className="px-8 text-sm py-3 text-neutral-400">{noNotesMessage}</p>
+        </li>
+      )}
     </ul>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { SmallNote, updateNote } from "@/app/actions";
-import { useTransition } from "react";
+import { useTransition, useState } from "react";
 import { clsx } from "clsx";
 import { usePathname } from "next/navigation";
 import { TbHeart, TbHeartFilled, TbLoader2, TbTrash } from "react-icons/tb";
@@ -15,9 +15,54 @@ import { store, RootState, AppDispatch } from "@/store";
 import TooltipElement from "@/components/tooltipelement";
 import { useRouter } from "next/navigation";
 import { deleteNote } from "../actions";
+import CenteredModal from "@/components/centeredmodal";
 
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 const useAppDispatch = () => useDispatch<AppDispatch>();
+
+function DeleteNoteModal({
+  show,
+  note,
+  onClose,
+  onSubmit,
+}: {
+  show: boolean;
+  note: SmallNote;
+  onClose: () => void;
+  onSubmit: () => void;
+}) {
+  return (
+    <CenteredModal show={show} onClose={onClose}>
+      <div className="flex flex-col items-center justify-center py-6 px-6">
+        <h1 className="text-xl font-bold text-neutral-200 mb-4">
+          Delete note?
+        </h1>
+        <p className="text-sm text-neutral-300">
+          Are you sure you want to delete the note{" "}
+          <span className="font-bold">
+            {note.title ? note.title : "Untitled"}
+          </span>
+          ?
+        </p>
+        <div className="flex items-center justify-between gap-4 w-full mt-10">
+          <button
+            onClick={onClose}
+            className="flex text-sm text-neutral-300 items-center w-full justify-center px-4 py-2 rounded-full hover:bg-neutral-800 transition-colors"
+          >
+            Cancel
+          </button>
+
+          <button
+            onClick={onSubmit}
+            className="border-2 text-sm text-neutral-300 w-full border-red-700 px-4 py-2 rounded-full hover:bg-red-700 transition-colors h-10 flex items-center justify-center"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </CenteredModal>
+  );
+}
 
 export default function ListbarItem({
   index,
@@ -28,6 +73,7 @@ export default function ListbarItem({
 }) {
   const [deleteIsPending, startDeleteTransition] = useTransition();
   const [favoriteIsPending, startFavoriteTransition] = useTransition();
+  const [showDeleteNoteModal, setShowDeleteNoteModal] = useState(false);
   const pathname = usePathname();
   const id = pathname.split("/")[2];
   const selected = id === note.id;
@@ -68,10 +114,14 @@ export default function ListbarItem({
     }
   });
 
-  const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+  const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowDeleteNoteModal(true);
+  };
+
+  const handleSubmitDelete = () =>
     startDeleteTransition(async () => {
-      e.preventDefault();
-      e.stopPropagation();
       await deleteNote(note.id);
       dispatch(deleteStoreNote(note.id));
       if (selected) {
@@ -109,6 +159,10 @@ export default function ListbarItem({
         })
       );
     });
+
+  const handleCloseDeleteNoteModal = () => {
+    setShowDeleteNoteModal(false);
+  };
 
   return (
     <li
@@ -185,6 +239,13 @@ export default function ListbarItem({
           </div>
         </div>
       </Link>
+
+      <DeleteNoteModal
+        show={showDeleteNoteModal}
+        onClose={handleCloseDeleteNoteModal}
+        onSubmit={handleSubmitDelete}
+        note={note}
+      />
     </li>
   );
 }

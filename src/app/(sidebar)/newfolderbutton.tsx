@@ -1,11 +1,15 @@
 "use client";
 
-import { TbCheck, TbPlus, TbX } from "react-icons/tb";
+import { TbPlus } from "react-icons/tb";
 import { createFolder } from "../actions";
 import { getFolders } from "../actions";
 import { AppDispatch } from "@/store";
 import { useDispatch } from "react-redux";
-import { setStoreFolders } from "@/store/notesSlice";
+import {
+  setStoreFolders,
+  setCurrentFolder,
+  setStoreNotes,
+} from "@/store/notesSlice";
 import { useState } from "react";
 import CenteredModal from "@/components/centeredmodal";
 import clsx from "clsx";
@@ -130,8 +134,10 @@ export default function NewFolderButton() {
       color,
     });
     if (!folder) return;
+    dispatch(setCurrentFolder(folder.id));
     const folders = await getFolders();
     dispatch(setStoreFolders(folders));
+    dispatch(setStoreNotes([]));
   };
 
   return (
