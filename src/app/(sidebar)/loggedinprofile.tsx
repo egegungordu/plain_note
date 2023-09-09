@@ -25,7 +25,7 @@ export default function LoggedInProfile({ user }: { user: Session["user"] }) {
 
   return (
     <div className="relative">
-      <Popover show={showPopover} onClose={handleClosePopover}>
+      <Popover side="t" show={showPopover} onClose={handleClosePopover}>
         <div className="flex flex-col items-start justify-center pt-6 pb-3 w-60">
           <h1 className="text-lg font-semibold text-neutral-300 px-6">
             {name ?? ""}

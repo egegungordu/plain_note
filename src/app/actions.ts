@@ -125,11 +125,13 @@ export async function updateNote({
   title,
   content,
   isFavorite,
+  folderId,
 }: {
   id: string;
   title?: string;
   content?: string;
   isFavorite?: boolean;
+  folderId?: string;
 }) {
   const session = await getServerSession(authOptions);
 
@@ -150,6 +152,7 @@ export async function updateNote({
       content,
       shortContent,
       isFavorite,
+      folderId,
     },
   });
 

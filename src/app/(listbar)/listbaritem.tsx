@@ -15,54 +15,10 @@ import { store, RootState, AppDispatch } from "@/store";
 import TooltipElement from "@/components/tooltipelement";
 import { useRouter } from "next/navigation";
 import { deleteNote } from "../actions";
-import CenteredModal from "@/components/centeredmodal";
+import DeleteNoteModal from "@/components/deletenotemodal";
 
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 const useAppDispatch = () => useDispatch<AppDispatch>();
-
-function DeleteNoteModal({
-  show,
-  note,
-  onClose,
-  onSubmit,
-}: {
-  show: boolean;
-  note: SmallNote;
-  onClose: () => void;
-  onSubmit: () => void;
-}) {
-  return (
-    <CenteredModal show={show} onClose={onClose}>
-      <div className="flex flex-col items-center justify-center py-6 px-6">
-        <h1 className="text-xl font-bold text-neutral-200 mb-4">
-          Delete note?
-        </h1>
-        <p className="text-sm text-neutral-300">
-          Are you sure you want to delete the note{" "}
-          <span className="font-bold">
-            {note.title ? note.title : "Untitled"}
-          </span>
-          ?
-        </p>
-        <div className="flex items-center justify-between gap-4 w-full mt-10">
-          <button
-            onClick={onClose}
-            className="flex text-sm text-neutral-300 items-center w-full justify-center px-4 py-2 rounded-full hover:bg-neutral-800 transition-colors"
-          >
-            Cancel
-          </button>
-
-          <button
-            onClick={onSubmit}
-            className="border-2 text-sm text-neutral-300 w-full border-red-700 px-4 py-2 rounded-full hover:bg-red-700 transition-colors h-10 flex items-center justify-center"
-          >
-            Delete
-          </button>
-        </div>
-      </div>
-    </CenteredModal>
-  );
-}
 
 export default function ListbarItem({
   index,
@@ -120,7 +76,7 @@ export default function ListbarItem({
     setShowDeleteNoteModal(true);
   };
 
-  const handleSubmitDelete = () =>
+  const handleSubmitDelete = async () =>
     startDeleteTransition(async () => {
       await deleteNote(note.id);
       dispatch(deleteStoreNote(note.id));
