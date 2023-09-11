@@ -1,5 +1,3 @@
-import { createPortal } from "react-dom";
-
 interface TooltipElement<T extends React.ElementType> {
   text: String;
   as?: T;

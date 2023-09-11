@@ -3,20 +3,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/authoptions";
 import { prisma } from "@/db";
-import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 import { note2small } from "@/utils";
-
-const convertToSearchQuery = (search: string) => {
-  // remove all non-alphanumeric characters
-  const searchQuery = search.replace(/[^a-zA-Z0-9 ]/g, "");
-  if (searchQuery.length === 0) return searchQuery;
-  // surround all words with * to make it a wildcard search
-  return searchQuery
-    .split(" ")
-    .map((word) => `*${word}*`)
-    .join(" ");
-};
 
 export type SmallNote = Awaited<ReturnType<typeof getNotes>>[number];
 export async function getNotes({
