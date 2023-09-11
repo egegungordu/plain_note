@@ -3,13 +3,11 @@
 import { Note } from "@/app/actions";
 import {
   FormEventHandler,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,
   useTransition,
 } from "react";
-import { useEffectOnce, useEventListener } from "usehooks-ts";
 import { updateStoreNote } from "@/store/notesSlice";
 import { useSelector, useDispatch, TypedUseSelectorHook } from "react-redux";
 import { store, AppDispatch, RootState } from "@/store";
@@ -79,39 +77,6 @@ export default function InteractiveNote({ note }: { note: Note }) {
     );
   };
 
-  // prevent the user from pasting html elements,
-  // and only paste the text
-  useEventListener("paste", (e) => {
-    e.preventDefault();
-    const text_only = e.clipboardData
-      ? e.clipboardData.getData("text/plain")
-      : // For IE
-      // @ts-ignore
-      window.clipboardData
-      ? // @ts-ignore
-        window.clipboardData.getData("Text")
-      : "";
-
-    if (document.queryCommandSupported("insertText")) {
-      // document.execCommand('insertText', false, text_only);
-      document.execCommand("insertText", false, text_only.trim());
-    } else {
-      // if the browser doesn't support insertText,
-      // this prevents screws up the undo stack
-      if (!noteRef.current?.contains(e.target as Node)) return;
-      const text_only = e.clipboardData?.getData("text/plain") ?? "";
-      const clipdata = e.clipboardData;
-      if (clipdata === null) return;
-      const selection = window.getSelection();
-      if (selection === null) return;
-      if (selection.rangeCount) {
-        selection.getRangeAt(0).insertNode(document.createTextNode(text_only));
-        selection.collapseToEnd();
-      }
-      e.preventDefault();
-    }
-  });
-
   return (
     <div
       ref={noteRef}
@@ -126,25 +91,27 @@ export default function InteractiveNote({ note }: { note: Note }) {
         onInput={handleTitleInput}
         onKeyDown={handleTitleKeyDown}
         spellCheck
-        contentEditable
+        /* @ts-ignore */
+        contentEditable="plaintext-only"
         suppressContentEditableWarning
         className="text-4xl px-8 mt-1 font-semibold text-neutral-300 empty:text-neutral-600 border-l-4 border-l-transparent focus:border-l-orange-700 focus:outline-none empty:after:content-[attr(placeholder)] empty:after:pointer-events-none hyphens-manual break-all"
       >
         {editedNote.title}
       </h1>
 
-      <p
+      <div
         id="note-content"
         ref={contentRef}
         onInput={handleContentInput}
         placeholder="Simply type here..."
         spellCheck
-        contentEditable
+        /* @ts-ignore */
+        contentEditable="plaintext-only"
         suppressContentEditableWarning
-        className="text-neutral-300 mt-8 px-8 items-center empty:text-neutral-600 border-l-4 border-l-transparent focus:border-l-orange-700 focus:outline-none empty:after:content-[attr(placeholder)] empty:after:pointer-events-none break-all hyphens-manual"
+        className="inline-block text-neutral-300 mt-8 px-8 items-center empty:text-neutral-600 border-l-4 border-l-transparent focus:border-l-orange-700 focus:outline-none empty:after:content-[attr(placeholder)] empty:after:pointer-events-none break-all hyphens-manual"
       >
         {editedNote.content}
-      </p>
+      </div>
     </div>
   );
 }

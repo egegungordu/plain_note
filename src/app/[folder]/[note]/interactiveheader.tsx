@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useTransition, useEffect, useRef, Suspense } from "react";
+import { useState, useTransition, useEffect, useRef } from "react";
 import {
   TbArrowsMaximize,
   TbArrowsMinimize,
-  TbCross,
   TbDeviceFloppy,
   TbDots,
   TbX,
@@ -19,20 +18,13 @@ import { setIsFullscreen } from "@/store/uiSlice";
 import {
   updateStoreNote,
   deleteStoreNote,
-  setStoreFolders,
   setStoreNotes,
   setStoreSearchResultInfo,
   setCurrentFolder,
 } from "@/store/notesSlice";
 import { useRouter } from "next/navigation";
 import { getRelativeTimeString } from "@/utils";
-import {
-  updateNote,
-  deleteNote,
-  Note,
-  getFolders,
-  getNotes,
-} from "@/app/actions";
+import { updateNote, deleteNote, Note, getNotes } from "@/app/actions";
 import Popover from "@/components/popover";
 import DeleteNoteModal from "@/components/deletenotemodal";
 import CenteredModal from "@/components/centeredmodal";
@@ -133,7 +125,6 @@ export default function InteractiveHeader({ note }: { note: Note }) {
   });
 
   const handleCloseMorePopover = () => {
-    // setShowDeleteNoteModal(false);
     setShowMorePopover(false);
   };
 
